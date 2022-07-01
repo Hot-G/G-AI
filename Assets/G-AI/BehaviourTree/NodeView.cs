@@ -14,15 +14,16 @@ public class NodeView : Node
     public Port input;
     public Port output;
     
-    public NodeView(BehaviourNode node) : base("Assets/Scripts/AI/NodeView.uxml")
+    public NodeView(BehaviourNode node) : base("Assets/G-AI/BehaviourTree/NodeView.uxml")
     {
         this.node = node;
         this.title = node.NodeName;
         this.viewDataKey = node.guid;
         
-        style.left = node.position.x;
-        style.top = node.position.y;
-
+        //style.left = node.position.x;
+        //style.top = node.position.y;
+        SetPosition(new Rect(node.position, Vector2.zero));
+        Debug.Log("NODE POSITION IS " + node.position);
         CreateInputPorts();
         CreateOutputPorts();
         SetupClasses();

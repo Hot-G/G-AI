@@ -22,7 +22,9 @@ public class BehaviourTree : ScriptableObject
         return treeState;
     }
 
-    public BehaviourNode CreateNode(System.Type type)
+#if UNITY_EDITOR
+
+    public BehaviourNode CreateNode(System.Type type, Vector2 position)
     {
         BehaviourNode node = ScriptableObject.CreateInstance(type) as BehaviourNode;
         node.nodeName = node.NodeName;
@@ -31,6 +33,7 @@ public class BehaviourTree : ScriptableObject
         node.name = node.nodeName;
         node.guid = GUID.Generate().ToString();
         node.blackboard = blackboard;
+        node.position = position;
         
         //Undo.RecordObject(this, "Behaviour Tree (Create Node)");
         nodes.Add(node);
@@ -101,6 +104,8 @@ public class BehaviourTree : ScriptableObject
             //EditorUtility.SetDirty(compositeNode);
         }
     }
+    
+#endif
 
     public List<BehaviourNode> GetChildren(BehaviourNode parent)
     {
@@ -124,7 +129,7 @@ public class BehaviourTree : ScriptableObject
         return new List<BehaviourNode>();
     }
 
-    public void Traverse(BehaviourNode node, System.Action<BehaviourNode> visiter)
+    private void Traverse(BehaviourNode node, System.Action<BehaviourNode> visiter)
     {
         if (node)
         {
@@ -174,6 +179,11 @@ public class BehaviourTree : ScriptableObject
             var types = TypeCache.GetTypesDerivedFrom<Blackboard>();
             
             variableNameList.Clear();
+            if (types.Count == 0)
+            {
+                EditorGUILayout.LabelField("is not created");
+                return;
+            }
             
             int index = types.IndexOf(treeItem.blackboard.GetType());
 

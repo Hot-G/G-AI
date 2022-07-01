@@ -46,12 +46,12 @@ public class BehaviorTreeEditor : EditorWindow
         VisualElement root = rootVisualElement;
 
         // Import UXML
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/AI/BehaviorTreeEditor.uxml");
+        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uxml");
         visualTree.CloneTree(root);
 
         // A stylesheet can be added to a VisualElement.
         // The style will be applied to the VisualElement and all of its children.
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/AI/BehaviorTreeEditor.uss");
+        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
         root.styleSheets.Add(styleSheet);
 
         treeView = root.Q<BehaviorTreeView>();
@@ -148,10 +148,7 @@ public class BehaviorTreeEditor : EditorWindow
         }
         else
         {
-            if (AssetDatabase.CanOpenForEdit(tree))
-            {
-                treeView?.PopulateView(tree);
-            }
+            treeView?.PopulateView(tree);
         }
         
         CreateSerializedVariables();
@@ -166,7 +163,8 @@ public class BehaviorTreeEditor : EditorWindow
     {
         treeObject = new SerializedObject(tree);
         blackboard = tree.blackboard;
-        blackboardObject = new SerializedObject(blackboard);
+        if (blackboard != null)
+            blackboardObject = new SerializedObject(blackboard);
     }
 
     private void OnNodeSelectionChanged(NodeView nodeView)

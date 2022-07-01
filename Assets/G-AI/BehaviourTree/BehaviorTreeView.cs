@@ -24,7 +24,7 @@ public class BehaviorTreeView : GraphView
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
 
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/AI/BehaviorTreeEditor.uss");
+        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
         styleSheets.Add(styleSheet);
 
         //Undo.undoRedoPerformed += OnUndoRedo;
@@ -51,7 +51,7 @@ public class BehaviorTreeView : GraphView
 
         if (tree.rootNode == null)
         {
-            tree.rootNode = tree.CreateNode(typeof(BehaviourRootNode)) as BehaviourRootNode;
+            tree.rootNode = tree.CreateNode(typeof(BehaviourRootNode), Vector2.zero) as BehaviourRootNode;
             //EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
@@ -126,7 +126,7 @@ public class BehaviorTreeView : GraphView
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Actions/{nodeName}", a => CreateBehaviourNode(type));
+                evt.menu.AppendAction($"Actions/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
@@ -139,7 +139,7 @@ public class BehaviorTreeView : GraphView
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Composites/{nodeName}", (a) => CreateBehaviourNode(type));
+                evt.menu.AppendAction($"Composites/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
@@ -152,15 +152,16 @@ public class BehaviorTreeView : GraphView
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Decorators/{nodeName}", (a) => CreateBehaviourNode(type));
+                evt.menu.AppendAction($"Decorators/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
     }
     
-    private void CreateBehaviourNode(System.Type type)
+    private void CreateBehaviourNode(System.Type type, Vector2 position)
     {
-        BehaviourNode node = tree.CreateNode(type);
+        Debug.Log("WANT TO CREATE " + position);
+        BehaviourNode node = tree.CreateNode(type, position);
         CreateNodeView(node);
     }
 
