@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-[CreateAssetMenu(menuName = "AI/Blackboard", order = 0)]
+//[CreateAssetMenu(menuName = "AI/Blackboard", order = 0)]
 public class Blackboard : ScriptableObject
 {
     public NavMeshAgent navMeshAgent;

@@ -1,5 +1,5 @@
 ﻿
-public class BehaviourRepeatNode : BehaviourDecoratorNode
+public class BehaviorRepeatNode : BehaviorDecoratorNode
 {
     public override string NodeName => "REPEATER";
 

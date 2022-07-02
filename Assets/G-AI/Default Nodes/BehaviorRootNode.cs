@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class BehaviourRootNode : BehaviourNode
+public class BehaviorRootNode : BehaviorNode
 {
-    public BehaviourNode child;
+    public BehaviorNode child;
     
     public override string NodeName => "ROOT";
 
@@ -17,9 +17,9 @@ public class BehaviourRootNode : BehaviourNode
         child.UpdateState(newState);
     }
 
-    public override BehaviourNode Clone()
+    public override BehaviorNode Clone()
     {
-        BehaviourRootNode node = Instantiate(this);
+        BehaviorRootNode node = Instantiate(this);
         node.child = child.Clone();
         return node;
     }

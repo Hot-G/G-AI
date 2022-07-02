@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class RunBehaviourTree : MonoBehaviour
+public class RunBehaviorTree : MonoBehaviour
 {
-    public BehaviourTree tree;
+    public BehaviorTree tree;
     [HideInInspector] public Blackboard blackboard;
 
     private void Awake()
@@ -21,7 +21,7 @@ public class RunBehaviourTree : MonoBehaviour
 
     public void Stop()
     {
-        tree.rootNode.UpdateState(BehaviourNode.State.Failure);
+        tree.rootNode.UpdateState(BehaviorNode.State.Failure);
         enabled = false;
     }
     

@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class SplitView : TwoPaneSplitView
 {
-    public class UxmlFactory : UxmlFactory<SplitView, TwoPaneSplitView.UxmlTraits> { }
+    public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> { }
 }
 
 #endif

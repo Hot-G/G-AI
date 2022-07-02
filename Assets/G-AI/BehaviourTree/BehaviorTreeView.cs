@@ -10,21 +10,24 @@ using UnityEngine;
 
 public class BehaviorTreeView : GraphView
 {
-    public class UxmlFactory : UxmlFactory<BehaviorTreeView, UxmlTraits> { }
+    public new class UxmlFactory : UxmlFactory<BehaviorTreeView, UxmlTraits> { }
+
     public Action<NodeView> OnNodeSelected;
     public Action OnNodeDeleted;
-    private BehaviourTree tree;
+    private BehaviorTree tree;
+
     public BehaviorTreeView()
     {
         Insert(0, new GridBackground());
-        
+
         
         this.AddManipulator(new ContentZoomer());
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
 
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
+        var styleSheet =
+            AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
         styleSheets.Add(styleSheet);
 
         //Undo.undoRedoPerformed += OnUndoRedo;
@@ -36,7 +39,7 @@ public class BehaviorTreeView : GraphView
         AssetDatabase.SaveAssets();
     }
 
-    NodeView FindNodeView(BehaviourNode node) => GetNodeByGuid(node.guid) as NodeView;
+    NodeView FindNodeView(BehaviorNode node) => GetNodeByGuid(node.guid) as NodeView;
 
     public void ClearView()
     {
@@ -45,17 +48,17 @@ public class BehaviorTreeView : GraphView
         graphViewChanged += OnGraphViewChanged;
     }
 
-    public void PopulateView(BehaviourTree tree)
+    public void PopulateView(BehaviorTree tree)
     {
         this.tree = tree;
 
         if (tree.rootNode == null)
         {
-            tree.rootNode = tree.CreateNode(typeof(BehaviourRootNode), Vector2.zero) as BehaviourRootNode;
+            tree.rootNode = tree.CreateNode(typeof(BehaviorRootNode), Vector2.zero) as BehaviorRootNode;
             //EditorUtility.SetDirty(tree);
             AssetDatabase.SaveAssets();
         }
-        
+
         //CREATE NODE VIEW
         tree.nodes.ForEach(CreateNodeView);
         //CREATE EDGES
@@ -88,7 +91,7 @@ public class BehaviorTreeView : GraphView
                 tree.DeleteNode(nodeView.node);
                 OnNodeDeleted?.Invoke();
             }
-                
+
             if (elem is Edge edge)
             {
                 NodeView parentView = edge.output.node as NodeView;
@@ -112,60 +115,62 @@ public class BehaviorTreeView : GraphView
                 view.SortChildren();
             });
         }
-        
+
         return graphViewChange;
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
     {
         {
-            var types = TypeCache.GetTypesDerivedFrom<BehaviourActionNode>();
+            var types = TypeCache.GetTypesDerivedFrom<BehaviorActionNode>();
             foreach (var type in types)
             {
-                BehaviourNode node = ScriptableObject.CreateInstance(type) as BehaviourNode;
+                BehaviorNode node = ScriptableObject.CreateInstance(type) as BehaviorNode;
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Actions/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
+                evt.menu.AppendAction($"Actions/{nodeName}",
+                    a => CreateBehaviorNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
-        
+
         {
-            var types = TypeCache.GetTypesDerivedFrom<BehaviourCompositeNode>();
+            var types = TypeCache.GetTypesDerivedFrom<BehaviorCompositeNode>();
             foreach (var type in types)
             {
-                BehaviourNode node = ScriptableObject.CreateInstance(type) as BehaviourNode;
+                BehaviorNode node = ScriptableObject.CreateInstance(type) as BehaviorNode;
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Composites/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
+                evt.menu.AppendAction($"Composites/{nodeName}",
+                    a => CreateBehaviorNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
-        
+
         {
-            var types = TypeCache.GetTypesDerivedFrom<BehaviourDecoratorNode>();
+            var types = TypeCache.GetTypesDerivedFrom<BehaviorDecoratorNode>();
             foreach (var type in types)
             {
-                BehaviourNode node = ScriptableObject.CreateInstance(type) as BehaviourNode;
+                BehaviorNode node = ScriptableObject.CreateInstance(type) as BehaviorNode;
                 var nodeName = node.NodeName;
                 if (nodeName == "")
                     nodeName = type.Name;
-                evt.menu.AppendAction($"Decorators/{nodeName}", a => CreateBehaviourNode(type, a.eventInfo.localMousePosition));
+                evt.menu.AppendAction($"Decorators/{nodeName}",
+                    a => CreateBehaviorNode(type, a.eventInfo.localMousePosition));
                 ScriptableObject.DestroyImmediate(node);
             }
         }
     }
-    
-    private void CreateBehaviourNode(System.Type type, Vector2 position)
+
+    public void CreateBehaviorNode(System.Type type, Vector2 position)
     {
-        Debug.Log("WANT TO CREATE " + position);
-        BehaviourNode node = tree.CreateNode(type, position);
+        BehaviorNode node = tree.CreateNode(type, position);
         CreateNodeView(node);
     }
 
-    private void CreateNodeView(BehaviourNode node)
+    private void CreateNodeView(BehaviorNode node)
     {
         NodeView nodeView = new NodeView(node);
         nodeView.OnNodeSelected = OnNodeSelected;
@@ -180,8 +185,6 @@ public class BehaviorTreeView : GraphView
             view.UpdateState();
         });
     }
-    
-
-    
 }
+
 #endif

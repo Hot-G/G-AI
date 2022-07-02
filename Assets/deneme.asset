@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7607485080103924568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0151c1654dcdc435ba48d24f3ae260e7, type: 3}
+  m_Name: USED BLACKBOARD
+  m_EditorClassIdentifier: 
+  navMeshAgent: {fileID: 0}
+  owner: {fileID: 0}
+  denemee1: 
+  deneme2: 0
+--- !u!114 &-1447301742853575608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c31a83cac84b3c822b4e32bc798804, type: 3}
+  m_Name: ROOT
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 563fd7c5526e34a4092132d987342c75
+  position: {x: 0, y: 0}
+  blackboard: {fileID: -7607485080103924568}
+  nodeName: ROOT
+  child: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6774e7519f4a05a1cba443184be2eb, type: 3}
+  m_Name: deneme
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: -1447301742853575608}
+  treeState: 0
+  blackboard: {fileID: -7607485080103924568}
+  nodes:
+  - {fileID: -1447301742853575608}

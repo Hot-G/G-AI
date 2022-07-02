@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-public class BehaviourSequenceNode : BehaviourCompositeNode
+public class BehaviorSequenceNode : BehaviorCompositeNode
 {
     private int currentIndex;
 

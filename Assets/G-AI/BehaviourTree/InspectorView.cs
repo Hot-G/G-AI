@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class InspectorView : VisualElement
 {
-    public class UxmlFactory : UxmlFactory<InspectorView, VisualElement.UxmlTraits> { }
+    public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
 
     private Editor editor;
     public InspectorView()

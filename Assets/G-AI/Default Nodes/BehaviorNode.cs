@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class BehaviourNode : ScriptableObject
+public abstract class BehaviorNode : ScriptableObject
 {
     public enum State
     {
@@ -49,7 +49,7 @@ public abstract class BehaviourNode : ScriptableObject
         }
     }
 
-    public virtual BehaviourNode Clone()
+    public virtual BehaviorNode Clone()
     {
         return Instantiate(this);
     }

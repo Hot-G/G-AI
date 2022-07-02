@@ -1,7 +1,7 @@
 ﻿ 
 using UnityEngine;
 
-public class BehaviourWaitNode : BehaviourActionNode
+public class BehaviorWaitNode : BehaviorActionNode
 {
     [Min(0)]
     public float duration = 1;

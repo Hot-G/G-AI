@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BehaviourCompositeNode : BehaviourNode
+public class BehaviorCompositeNode : BehaviorNode
 {
-    [HideInInspector] public List<BehaviourNode> children = new List<BehaviourNode>();
+    [HideInInspector] public List<BehaviorNode> children = new List<BehaviorNode>();
 
     public override void UpdateState(State newState)
     {
@@ -15,9 +15,9 @@ public class BehaviourCompositeNode : BehaviourNode
         }
     }
 
-    public override BehaviourNode Clone()
+    public override BehaviorNode Clone()
     {
-        BehaviourCompositeNode node = Instantiate(this);
+        BehaviorCompositeNode node = Instantiate(this);
         node.children = children.ConvertAll(c => c.Clone());
         return node;
     }

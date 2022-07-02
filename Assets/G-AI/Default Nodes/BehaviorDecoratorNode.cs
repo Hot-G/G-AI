@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class BehaviourDecoratorNode : BehaviourNode
+public class BehaviorDecoratorNode : BehaviorNode
 {
-    [HideInInspector] public BehaviourNode child;
+    [HideInInspector] public BehaviorNode child;
     
     public override void UpdateState(State newState)
     {
@@ -11,9 +11,9 @@ public class BehaviourDecoratorNode : BehaviourNode
     }
 
     
-    public override BehaviourNode Clone()
+    public override BehaviorNode Clone()
     {
-        BehaviourDecoratorNode node = Instantiate(this);
+        BehaviorDecoratorNode node = Instantiate(this);
         node.child = child.Clone();
         return node;
     }

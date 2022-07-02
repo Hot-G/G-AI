@@ -4,17 +4,17 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AI/Behaviour Tree", order = 0)]
-public class BehaviourTree : ScriptableObject
+public class BehaviorTree : ScriptableObject
 {
-    public BehaviourNode rootNode;
-    public BehaviourNode.State treeState = BehaviourNode.State.Running;
+    public BehaviorNode rootNode;
+    public BehaviorNode.State treeState = BehaviorNode.State.Running;
     [HideInInspector] public Blackboard blackboard;
 
-    public List<BehaviourNode> nodes = new List<BehaviourNode>();
+    public List<BehaviorNode> nodes = new List<BehaviorNode>();
 
-    public BehaviourNode.State Update()
+    public BehaviorNode.State Update()
     {
-        if (rootNode.state == BehaviourNode.State.Running)
+        if (rootNode.state == BehaviorNode.State.Running)
         {
             treeState = rootNode.Update();
         }
@@ -24,9 +24,9 @@ public class BehaviourTree : ScriptableObject
 
 #if UNITY_EDITOR
 
-    public BehaviourNode CreateNode(System.Type type, Vector2 position)
+    public BehaviorNode CreateNode(System.Type type, Vector2 position)
     {
-        BehaviourNode node = ScriptableObject.CreateInstance(type) as BehaviourNode;
+        BehaviorNode node = ScriptableObject.CreateInstance(type) as BehaviorNode;
         node.nodeName = node.NodeName;
         if (node.nodeName == "")
             node.nodeName = type.Name;
@@ -34,7 +34,7 @@ public class BehaviourTree : ScriptableObject
         node.guid = GUID.Generate().ToString();
         node.blackboard = blackboard;
         node.position = position;
-        
+
         //Undo.RecordObject(this, "Behaviour Tree (Create Node)");
         nodes.Add(node);
 
@@ -42,13 +42,13 @@ public class BehaviourTree : ScriptableObject
         {
             AssetDatabase.AddObjectToAsset(node, this);
         }
-        
+
         //Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (Create Node)");
         AssetDatabase.SaveAssets();
         return node;
     }
-    
-    public void DeleteNode(BehaviourNode node)
+
+    public void DeleteNode(BehaviorNode node)
     {
         //Undo.RecordObject(this, "Behaviour Tree (Remove Node)");
         nodes.Remove(node);
@@ -57,79 +57,79 @@ public class BehaviourTree : ScriptableObject
         AssetDatabase.SaveAssets();
     }
 
-    public void AddChild(BehaviourNode parent, BehaviourNode child)
+    public void AddChild(BehaviorNode parent, BehaviorNode child)
     {
-        if (parent is BehaviourDecoratorNode decoratorNode)
+        if (parent is BehaviorDecoratorNode decoratorNode)
         {
             //Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
             decoratorNode.child = child;
             //EditorUtility.SetDirty(decoratorNode);
         }
-        
-        if (parent is BehaviourRootNode behaviourRootNode)
+
+        if (parent is BehaviorRootNode behaviourRootNode)
         {
             //Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
             behaviourRootNode.child = child;
             //EditorUtility.SetDirty(behaviourRootNode);
         }
 
-        if (parent is BehaviourCompositeNode compositeNode)
+        if (parent is BehaviorCompositeNode compositeNode)
         {
             //Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
             compositeNode.children.Add(child);
             //EditorUtility.SetDirty(compositeNode);
         }
     }
-    
-    public void RemoveChild(BehaviourNode parent, BehaviourNode child)
+
+    public void RemoveChild(BehaviorNode parent, BehaviorNode child)
     {
-        if (parent is BehaviourDecoratorNode decoratorNode)
+        if (parent is BehaviorDecoratorNode decoratorNode)
         {
             //Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
             decoratorNode.child = null;
             //EditorUtility.SetDirty(decoratorNode);
         }
-        
-        if (parent is BehaviourRootNode behaviourRootNode)
+
+        if (parent is BehaviorRootNode behaviourRootNode)
         {
             //Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
             behaviourRootNode.child = null;
             //EditorUtility.SetDirty(behaviourRootNode);
         }
-        
-        if (parent is BehaviourCompositeNode compositeNode)
+
+        if (parent is BehaviorCompositeNode compositeNode)
         {
             //Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
             compositeNode.children.Remove(child);
             //EditorUtility.SetDirty(compositeNode);
         }
     }
-    
+
 #endif
 
-    public List<BehaviourNode> GetChildren(BehaviourNode parent)
+    public List<BehaviorNode> GetChildren(BehaviorNode parent)
     {
-        var decoratorNode = parent as BehaviourDecoratorNode;
+        var decoratorNode = parent as BehaviorDecoratorNode;
         if (decoratorNode && decoratorNode.child != null)
         {
-            return new List<BehaviourNode> { decoratorNode.child };
+            return new List<BehaviorNode> { decoratorNode.child };
         }
-        
-        if (parent is BehaviourRootNode behaviourRootNode && behaviourRootNode.child != null)
+
+        if (parent is BehaviorRootNode behaviourRootNode && behaviourRootNode.child != null)
         {
-            return new List<BehaviourNode> { behaviourRootNode.child };
+            return new List<BehaviorNode> { behaviourRootNode.child };
         }
-        
-        var compositeNode = parent as BehaviourCompositeNode;
+
+        var compositeNode = parent as BehaviorCompositeNode;
         if (compositeNode)
         {
             return compositeNode.children;
         }
 
-        return new List<BehaviourNode>();
+        return new List<BehaviorNode>();
     }
 
-    private void Traverse(BehaviourNode node, System.Action<BehaviourNode> visiter)
+    private void Traverse(BehaviorNode node, System.Action<BehaviorNode> visiter)
     {
         if (node)
         {
@@ -139,37 +139,32 @@ public class BehaviourTree : ScriptableObject
         }
     }
 
-    public BehaviourTree Clone()
+    public BehaviorTree Clone()
     {
-        BehaviourTree tree = Instantiate(this);
+        BehaviorTree tree = Instantiate(this);
         tree.rootNode = tree.rootNode.Clone();
-        tree.nodes = new List<BehaviourNode>();
-        Traverse(tree.rootNode, n =>
-        {
-            tree.nodes.Add(n);
-        });
-        
+        tree.nodes = new List<BehaviorNode>();
+        Traverse(tree.rootNode, n => { tree.nodes.Add(n); });
+
         return tree;
     }
 
     public void BindBlackboard()
     {
-        Traverse(rootNode, node =>
-        {
-            node.blackboard = blackboard;
-        });
+        Traverse(rootNode, node => { node.blackboard = blackboard; });
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(BehaviourTree))]
+    [CustomEditor(typeof(BehaviorTree))]
     public class BehaviourTreeEditor : Editor
     {
         List<string> variableNameList = new List<string>();
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            var treeItem = (BehaviourTree) target;
+            var treeItem = (BehaviorTree)target;
 
             EditorGUILayout.Space(15);
             EditorGUILayout.BeginHorizontal();
@@ -177,25 +172,27 @@ public class BehaviourTree : ScriptableObject
 
 
             var types = TypeCache.GetTypesDerivedFrom<Blackboard>();
-            
+
             variableNameList.Clear();
             if (types.Count == 0)
             {
                 EditorGUILayout.LabelField("is not created");
                 return;
             }
-            
-            int index = types.IndexOf(treeItem.blackboard.GetType());
+
+            int index = -1;
+            if (treeItem.blackboard)
+                index = types.IndexOf(treeItem.blackboard.GetType());
 
             foreach (var blackboardType in types)
             {
                 variableNameList.Add(blackboardType.Name);
             }
-            
+
             EditorGUI.BeginChangeCheck();
 
             index = EditorGUILayout.Popup(index, variableNameList.ToArray());
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 if (treeItem.blackboard != null)
@@ -204,7 +201,7 @@ public class BehaviourTree : ScriptableObject
                     AssetDatabase.SaveAssets();
                     treeItem.blackboard = null;
                 }
-                
+
                 var blackboardInstance = CreateInstance(types[index]) as Blackboard;
                 blackboardInstance.name = "USED BLACKBOARD";
                 treeItem.blackboard = blackboardInstance;
@@ -213,14 +210,13 @@ public class BehaviourTree : ScriptableObject
                 {
                     behaviourNode.blackboard = blackboardInstance;
                 }
-                
+
                 AssetDatabase.AddObjectToAsset(blackboardInstance, treeItem);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
-            
-            EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.EndHorizontal();
         }
     }
 #endif

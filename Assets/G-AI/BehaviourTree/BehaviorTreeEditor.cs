@@ -5,19 +5,21 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Callbacks;
+using UnityEditor.Experimental.GraphView;
 
 public class BehaviorTreeEditor : EditorWindow
 {
     private BehaviorTreeView treeView;
     private InspectorView inspectorView;
+    private NodeSearchWindow searchWindow;
     private IMGUIContainer blackboardView;
     private Label objectNameLabel;
 
-    private SerializedObject treeObject, blackboardObject;
+    private SerializedObject treeObject;
     private SerializedProperty blackboardProperty;
     private Blackboard blackboard;
-    private BehaviourTree tree;
-    
+    private BehaviorTree tree;
+
     [MenuItem("Behavior Tree/Behavior Tree Editor")]
     public static void OpenWindow()
     {
@@ -28,7 +30,7 @@ public class BehaviorTreeEditor : EditorWindow
     [OnOpenAsset]
     public static bool OnOpenAsset(int instanceId, int line)
     {
-        if (!(Selection.activeObject is BehaviourTree)) return false;
+        if (!(Selection.activeObject is BehaviorTree)) return false;
         OpenWindow();
         return true;
     }
@@ -46,7 +48,8 @@ public class BehaviorTreeEditor : EditorWindow
         VisualElement root = rootVisualElement;
 
         // Import UXML
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uxml");
+        var visualTree =
+            AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uxml");
         visualTree.CloneTree(root);
 
         // A stylesheet can be added to a VisualElement.
@@ -58,6 +61,8 @@ public class BehaviorTreeEditor : EditorWindow
         inspectorView = root.Q<InspectorView>();
         blackboardView = root.Q<IMGUIContainer>();
         objectNameLabel = treeView.Q<Label>();
+        
+        AddSearchWindow();
 
         treeView.OnNodeSelected = OnNodeSelectionChanged;
         treeView.OnNodeDeleted = OnNodeDeleted;
@@ -69,16 +74,25 @@ public class BehaviorTreeEditor : EditorWindow
         if (treeObject == null) return;
         if (blackboard == null) return;
         if (blackboardView == null) return;
+        
         blackboardView.onGUIHandler = () =>
         {
-            EditorGUI.BeginChangeCheck();
             foreach (var fieldInfo in blackboard.GetType().GetFields())
             {
-                EditorGUILayout.PropertyField(blackboardObject.FindProperty(fieldInfo.Name));
+                var fieldName = fieldInfo.FieldType.ToString();
+                var pointIndex = fieldName.LastIndexOf('.') + 1;
+                EditorGUILayout.LabelField(fieldInfo.Name + " (" + fieldName.Substring(pointIndex) + ")");
             }
-            
-            if (EditorGUI.EndChangeCheck() && !Application.isPlaying)
-                blackboardObject?.ApplyModifiedProperties();
+        };
+    }
+    
+    private void AddSearchWindow()
+    {
+        searchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
+        searchWindow.Configure(EditorWindow.focusedWindow, treeView);
+        treeView.nodeCreationRequest = context =>
+        {
+            SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
         };
     }
 
@@ -114,14 +128,14 @@ public class BehaviorTreeEditor : EditorWindow
 
     private void OnSelectionChange()
     {
-        tree = Selection.activeObject as BehaviourTree;
-        
+        tree = Selection.activeObject as BehaviorTree;
+
         var objectName = "";
         if (tree == null)
         {
             if (Selection.activeGameObject)
             {
-                var runTree = Selection.activeGameObject.GetComponent<RunBehaviourTree>();
+                var runTree = Selection.activeGameObject.GetComponent<RunBehaviorTree>();
                 if (runTree)
                 {
                     tree = runTree.tree;
@@ -138,7 +152,6 @@ public class BehaviorTreeEditor : EditorWindow
 
         if (tree == null)
         {
-            
             return;
         }
 
@@ -150,7 +163,7 @@ public class BehaviorTreeEditor : EditorWindow
         {
             treeView?.PopulateView(tree);
         }
-        
+
         CreateSerializedVariables();
 
         if (objectNameLabel != null)
@@ -163,15 +176,13 @@ public class BehaviorTreeEditor : EditorWindow
     {
         treeObject = new SerializedObject(tree);
         blackboard = tree.blackboard;
-        if (blackboard != null)
-            blackboardObject = new SerializedObject(blackboard);
     }
 
     private void OnNodeSelectionChanged(NodeView nodeView)
     {
         inspectorView.UpdateSelection(nodeView);
     }
-    
+
     private void OnNodeDeleted()
     {
         inspectorView.UpdateSelection(null);
@@ -181,7 +192,6 @@ public class BehaviorTreeEditor : EditorWindow
     {
         treeView?.UpdateNodeStates();
     }
-
 }
 
 #endif

@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class BehaviourPrintNode : BehaviourActionNode
+public class BehaviorPrintNode : BehaviorActionNode
 {
     public string printText;
     
