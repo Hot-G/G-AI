@@ -14,7 +14,9 @@ public class BehaviorTreeView : GraphView
 
     public Action<NodeView> OnNodeSelected;
     public Action OnNodeDeleted;
+    
     private BehaviorTree tree;
+    private NodeView selectedNode;
 
     public BehaviorTreeView()
     {
@@ -29,7 +31,7 @@ public class BehaviorTreeView : GraphView
         var styleSheet =
             AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
         styleSheets.Add(styleSheet);
-
+        
         //Undo.undoRedoPerformed += OnUndoRedo;
     }
 
@@ -121,6 +123,12 @@ public class BehaviorTreeView : GraphView
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
     {
+        if (selectedNode != null)
+        {
+            base.BuildContextualMenu(evt);
+            return;
+        }
+        
         {
             var types = TypeCache.GetTypesDerivedFrom<BehaviorActionNode>();
             foreach (var type in types)
@@ -174,7 +182,14 @@ public class BehaviorTreeView : GraphView
     {
         NodeView nodeView = new NodeView(node);
         nodeView.OnNodeSelected = OnNodeSelected;
+        nodeView.OnNodeSelected -= OnNodeSelectionChanged;
+        nodeView.OnNodeSelected += OnNodeSelectionChanged;
         AddElement(nodeView);
+    }
+
+    private void OnNodeSelectionChanged(NodeView node)
+    {
+        selectedNode = node;
     }
 
     public void UpdateNodeStates()

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class RunBehaviorTree : MonoBehaviour
 {
@@ -7,11 +8,25 @@ public class RunBehaviorTree : MonoBehaviour
 
     private void Awake()
     {
+        if (tree == null) return;
         tree = tree.Clone();
-        blackboard = tree.blackboard.Clone();
-        blackboard.SetupBlackboard(blackboard.GetType());
-        tree.blackboard = blackboard;
+
+        if (tree.blackboard == null)
+        {
+            tree.blackboard = ScriptableObject.CreateInstance<Blackboard>();
+            blackboard = tree.blackboard;
+        }
+        else
+        {
+            blackboard = tree.blackboard.Clone();
+            blackboard.SetupBlackboard(blackboard.GetType());
+            tree.blackboard = blackboard;
+
+        }
+
         tree.BindBlackboard();
+        blackboard.owner = transform;
+        blackboard.navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()

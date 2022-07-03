@@ -20,7 +20,7 @@ public class BehaviorTreeEditor : EditorWindow
     private Blackboard blackboard;
     private BehaviorTree tree;
 
-    [MenuItem("Behavior Tree/Behavior Tree Editor")]
+    [MenuItem("AI/Behavior Tree Editor")]
     public static void OpenWindow()
     {
         BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();
@@ -81,7 +81,11 @@ public class BehaviorTreeEditor : EditorWindow
             {
                 var fieldName = fieldInfo.FieldType.ToString();
                 var pointIndex = fieldName.LastIndexOf('.') + 1;
+                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(fieldInfo.Name + " (" + fieldName.Substring(pointIndex) + ")");
+                if (Application.isPlaying)
+                    EditorGUILayout.LabelField(fieldInfo.GetValue(blackboard).ToString());
+                EditorGUILayout.EndHorizontal();
             }
         };
     }
@@ -128,10 +132,10 @@ public class BehaviorTreeEditor : EditorWindow
 
     private void OnSelectionChange()
     {
-        tree = Selection.activeObject as BehaviorTree;
+        var selectedTree = Selection.activeObject as BehaviorTree;
 
         var objectName = "";
-        if (tree == null)
+        if (selectedTree == null)
         {
             if (Selection.activeGameObject)
             {
@@ -142,6 +146,10 @@ public class BehaviorTreeEditor : EditorWindow
                     objectName = " (" + Selection.activeObject.name + ")";
                 }
             }
+        }
+        else
+        {
+            tree = selectedTree;
         }
 
         if (treeView != null)

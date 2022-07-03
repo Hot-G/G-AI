@@ -4,7 +4,9 @@ using UnityEngine;
 public class BehaviorPrintNode : BehaviorActionNode
 {
     public string printText;
-    
+
+    public override string NodeName => "Print Log";
+
     public override void OnStart()
     {
         Debug.Log(printText);

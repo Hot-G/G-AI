@@ -10,6 +10,8 @@ public class BehaviorWaitNode : BehaviorActionNode
     private float realDuration;
     private float startTime;
 
+    public override string NodeName => "Wait";
+
     public override void OnStart()
     {
         startTime = Time.time;

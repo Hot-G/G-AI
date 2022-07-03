@@ -1,9 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 //[CreateAssetMenu(menuName = "AI/Blackboard", order = 0)]
@@ -92,3 +91,45 @@ public class Blackboard : ScriptableObject
         objectVariables[propertyName] = value;
     }
 }
+
+#if UNITY_EDITOR
+
+public class BlackboardCreateEditor : EditorWindow
+{
+    [MenuItem("AI/Create Blackboard")]
+    public static void OpenWindow()
+    {
+        BlackboardCreateEditor wnd = GetWindow<BlackboardCreateEditor>();
+        wnd.titleContent = new GUIContent("Create Blackboard");
+    }
+
+    private string fileNameField;
+
+    private void CreateGUI()
+    {
+        rootVisualElement.Add(new TextField("File Name: "));
+        return;
+        EditorGUILayout.TextField(fileNameField);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Create"))
+            CreateScriptFile("/Assets", fileNameField);
+            
+            
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void CreateScriptFile(string filePath, string fileName)
+    {
+        
+        using ( var streamWriter = new System.IO.StreamWriter( filePath ) )
+        {
+            streamWriter.WriteLine( "public class " + fileName + " : Blackboard" );
+            streamWriter.WriteLine( "{" );
+            streamWriter.WriteLine( "}" );
+        }
+        
+        AssetDatabase.Refresh();
+    }
+}
+
+#endif

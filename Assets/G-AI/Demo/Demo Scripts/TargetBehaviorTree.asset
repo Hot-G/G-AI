@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7607485080103924568
+--- !u!114 &-7131323571410084446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,14 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0151c1654dcdc435ba48d24f3ae260e7, type: 3}
-  m_Name: USED BLACKBOARD
+  m_Script: {fileID: 11500000, guid: 51eea30b3c3cf4a529075659d57d596d, type: 3}
+  m_Name: Move Random Point
   m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: 0}
-  owner: {fileID: 0}
-  denemee1: 
-  deneme2: 0
---- !u!114 &-1447301742853575608
+  state: 0
+  isStarted: 0
+  guid: 259799dda421d4d929e2f08b7ae79c43
+  position: {x: 20.840698, y: 206.0227}
+  blackboard: {fileID: 0}
+  nodeName: Move Random Point
+  moveRadius: 20
+--- !u!114 &-6361455697614541973
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -30,11 +33,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   isStarted: 0
-  guid: 563fd7c5526e34a4092132d987342c75
-  position: {x: 0, y: 0}
-  blackboard: {fileID: -7607485080103924568}
+  guid: 5ab7eb567cc3a4ffab764f38187f46ad
+  position: {x: 0, y: -16.599998}
+  blackboard: {fileID: 0}
   nodeName: ROOT
-  child: {fileID: 0}
+  child: {fileID: -7131323571410084446}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,10 +48,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e6774e7519f4a05a1cba443184be2eb, type: 3}
-  m_Name: deneme
+  m_Name: TargetBehaviorTree
   m_EditorClassIdentifier: 
-  rootNode: {fileID: -1447301742853575608}
+  rootNode: {fileID: -6361455697614541973}
   treeState: 0
-  blackboard: {fileID: -7607485080103924568}
+  blackboard: {fileID: 0}
   nodes:
-  - {fileID: -1447301742853575608}
+  - {fileID: -6361455697614541973}
+  - {fileID: -7131323571410084446}

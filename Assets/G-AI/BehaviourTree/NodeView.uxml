@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="NodeViewStyle.uss" />
+    <Style src="project://database/Assets/G-AI/BehaviourTree/NodeViewStyle.uss?fileID=7433441132597879392&amp;guid=4750a2fefb9ae0242850d8ee4f6ae8b3&amp;type=3#NodeViewStyle" />
     <ui:VisualElement name="node-state" style="flex-grow: 1; left: -5px; top: -5px; right: -5px; bottom: -5px;" />
     <ui:VisualElement name="node-border">
         <ui:VisualElement name="contents">
@@ -7,7 +7,7 @@
             <ui:VisualElement name="top">
                 <ui:VisualElement name="input" />
                 <ui:VisualElement name="divider" class="vertical" />
-                <ui:VisualElement name="title">
+                <ui:VisualElement name="title" style="padding-top: 5px; padding-bottom: 5px;">
                     <ui:Label name="nodeName" text="BehaviourSequenceNode" class="unity-text-element unity-label" />
                     <ui:VisualElement name="title-button-container">
                         <ui:VisualElement name="collapse-button">
