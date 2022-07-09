@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Label text="CREATE NEW BLACKBOARD" style="font-size: 14px; -unity-font-style: bold; -unity-text-align: upper-center; background-color: rgb(36, 35, 35); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+    <ui:TextField picking-mode="Ignore" label="Blackboard Name" value="filler text" style="padding-left: 0; padding-right: 0; padding-top: 10px; padding-bottom: 10px;" />
+    <ui:Button text="CREATE" display-tooltip-when-elided="true" />
+</ui:UXML>

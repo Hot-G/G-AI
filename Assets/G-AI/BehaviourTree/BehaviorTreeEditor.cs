@@ -20,7 +20,7 @@ public class BehaviorTreeEditor : EditorWindow
     private Blackboard blackboard;
     private BehaviorTree tree;
 
-    [MenuItem("AI/Behavior Tree Editor")]
+    //[MenuItem("AI/Behavior Tree Editor")]
     public static void OpenWindow()
     {
         BehaviorTreeEditor wnd = GetWindow<BehaviorTreeEditor>();
@@ -84,7 +84,7 @@ public class BehaviorTreeEditor : EditorWindow
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(fieldInfo.Name + " (" + fieldName.Substring(pointIndex) + ")");
                 if (Application.isPlaying)
-                    EditorGUILayout.LabelField(fieldInfo.GetValue(blackboard).ToString());
+                    EditorGUILayout.LabelField(blackboard.GetValue(fieldInfo.Name, fieldInfo.FieldType));
                 EditorGUILayout.EndHorizontal();
             }
         };

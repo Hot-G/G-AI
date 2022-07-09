@@ -1,11 +1,15 @@
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
+using System.IO;
+#endif
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 [System.Serializable]
-//[CreateAssetMenu(menuName = "AI/Blackboard", order = 0)]
 public class Blackboard : ScriptableObject
 {
     public NavMeshAgent navMeshAgent;
@@ -41,6 +45,30 @@ public class Blackboard : ScriptableObject
         return Instantiate(this);
     }
 
+#if UNITY_EDITOR
+
+    public string GetValue(string propertyName, System.Type propertyType)
+    {
+        if (propertyName == "owner")
+            return owner.ToString();
+        if (propertyName == "navMeshAgent")
+            return navMeshAgent.ToString();
+        
+        if (typeof(bool) == propertyType)
+            return GetBoolValue(propertyName).ToString();
+        if (typeof(string) == propertyType)
+            return GetStringValue(propertyName);
+        if (typeof(int) == propertyType)
+            return GetIntValue(propertyName).ToString();
+        if (typeof(Transform) == propertyType)
+            return GetTransformValue(propertyName)?.ToString();
+        
+        return GetObjectValue<string>(propertyName);
+    }
+    
+#endif
+    
+    
     public bool GetBoolValue(string propertyName)
     {
         return boolVariables[propertyName];
@@ -96,36 +124,64 @@ public class Blackboard : ScriptableObject
 
 public class BlackboardCreateEditor : EditorWindow
 {
-    [MenuItem("AI/Create Blackboard")]
+    [MenuItem("Assets/Create/AI/Create Blackboard")]
     public static void OpenWindow()
     {
-        BlackboardCreateEditor wnd = GetWindow<BlackboardCreateEditor>();
+        BlackboardCreateEditor wnd = GetWindow<BlackboardCreateEditor>(true, string.Empty, true);
+        wnd.maxSize = wnd.minSize = new Vector2(350, 110);
         wnd.titleContent = new GUIContent("Create Blackboard");
+        wnd.ShowPopup();
     }
 
     private string fileNameField;
+    private TextField textField;
+    private Button createButton;
 
     private void CreateGUI()
     {
-        rootVisualElement.Add(new TextField("File Name: "));
-        return;
-        EditorGUILayout.TextField(fileNameField);
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Create"))
-            CreateScriptFile("/Assets", fileNameField);
-            
-            
-        EditorGUILayout.EndHorizontal();
+        // Each editor window contains a root VisualElement object
+        VisualElement root = rootVisualElement;
+
+        // Import UXML
+        var visualTree =
+            AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/CreateBlackboardEditor.uxml");
+        visualTree.CloneTree(root);
+
+        textField = root.Q<TextField>();
+        createButton = root.Q<Button>();
+        
+        textField.Focus();
+        
+        createButton.RegisterCallback<MouseUpEvent>(evt =>
+        {
+            string path = AssetDatabase.GetAssetPath (Selection.activeObject);
+
+            if (path == "")
+            {
+                path = "Assets";
+            }
+            else if (Path.GetExtension(path) != "")
+            {
+                path = path.Replace(Path.GetFileName (AssetDatabase.GetAssetPath (Selection.activeObject)), "");
+            }
+            //CREATE FILE
+            CreateScriptFile(path, textField.text);
+            //OPEN FILE
+            //AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<MonoScript>(path + "/" + textField.text + ".cs"));
+            this.Close();
+        });
     }
 
     private void CreateScriptFile(string filePath, string fileName)
     {
-        
-        using ( var streamWriter = new System.IO.StreamWriter( filePath ) )
+        using (var streamWriter = new StreamWriter( filePath+ "/" + fileName + ".cs" ))
         {
             streamWriter.WriteLine( "public class " + fileName + " : Blackboard" );
             streamWriter.WriteLine( "{" );
+            streamWriter.WriteLine( "" );
             streamWriter.WriteLine( "}" );
+            
+            streamWriter.Close();
         }
         
         AssetDatabase.Refresh();

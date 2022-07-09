@@ -25,7 +25,7 @@ public class BehaviorMoveRandomPointNode : BehaviorActionNode
         if (float.IsPositiveInfinity(remainingDistance)) return State.Failure;
 
         return blackboard.navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete
-               && blackboard.navMeshAgent.remainingDistance == 0
+               && blackboard.navMeshAgent.remainingDistance <= blackboard.navMeshAgent.stoppingDistance
             ? State.Success
             : State.Running;
     }

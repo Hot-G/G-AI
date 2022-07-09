@@ -7,7 +7,6 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
     public override string NodeName => "Move Target";
 
     [HideInInspector] public string targetVariableName;
-    public float acceptRadius = 1f;
 
     private Transform targetTransform;
     private Vector3 oldPosition;
@@ -21,17 +20,31 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
 
     public override State OnUpdate()
     {
-        if ((targetTransform.position - oldPosition).sqrMagnitude > 1f)
+        if (targetTransform != blackboard.GetTransformValue(targetVariableName))
+        {
+            targetTransform = blackboard.GetTransformValue(targetVariableName);
+            oldPosition = targetTransform.position;
+            blackboard.navMeshAgent.SetDestination(oldPosition);
+        }
+
+        if (Vector3.SqrMagnitude(oldPosition - targetTransform.position) > 2f)
         {
             oldPosition = targetTransform.position;
             blackboard.navMeshAgent.SetDestination(oldPosition);
         }
         
-        if (float.IsPositiveInfinity(blackboard.navMeshAgent.remainingDistance)) return State.Failure;
-        
-        return blackboard.navMeshAgent.remainingDistance < acceptRadius
-            ? State.Success
-            : State.Running;
+        if (!blackboard.navMeshAgent.pathPending)
+        {
+            if (blackboard.navMeshAgent.remainingDistance <= blackboard.navMeshAgent.stoppingDistance)
+            {
+                if (!blackboard.navMeshAgent.hasPath || blackboard.navMeshAgent.velocity.sqrMagnitude <= 0.2f)
+                {
+                    return State.Success;
+                }
+            }
+        }
+
+        return State.Running;
     }
 
 #if UNITY_EDITOR
