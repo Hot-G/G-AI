@@ -2,9 +2,12 @@
 
 using UnityEngine.UIElements;
 
-public class SplitView : TwoPaneSplitView
+namespace G_AI.BehaviourTree
 {
-    public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> { }
+    public class SplitView : TwoPaneSplitView
+    {
+        public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> { }
+    }
 }
 
 #endif

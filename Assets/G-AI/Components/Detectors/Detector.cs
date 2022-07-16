@@ -1,168 +1,155 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CogsAndGoggles.Library.Attributes;
 using UnityEngine;
-using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
-namespace Eadon.AI.Detectors
+public enum DetectionMode
 {
-    public enum DetectionMode
-    {
-        Update,
-        FixedUpdate,
-        PeriodicUpdate,
-        Manual
-    }
+    Update,
+    FixedUpdate,
+    PeriodicUpdate,
+    Manual
+}
+
+public abstract class Detector : MonoBehaviour
+{
+    public List<GameObject> ignoreList;
+    public bool enableTagFilter;
+    public string[] allowedTags;
     
-    public abstract class Detector : MonoBehaviour
+
+    // Event is called for each GameObject at the time it is added to the detectors DetectedObjects list
+    public Action<GameObject> onDetected;
+
+    // Event is called for each GameObject at the time it is removed to the detectors DetectedObjects list
+    public Action<GameObject> onLostDetection;
+
+    public List<GameObject> detectedObjects;
+
+    protected virtual void Awake()
     {
-        public DetectionMode detectionMode;
-        public float checkInterval = 1f;
-
-        public List<GameObject> ignoreList;
-        public bool enableTagFilter;
-        [TagSelector]
-        public string[] allowedTags;
-        
-        [Serializable]
-        public class DetectorEventHandler : UnityEvent<Detector> { }
-
-        [Serializable]
-        public class DetectionEventHandler : UnityEvent<GameObject> { }
-
-        // Event is called for each GameObject at the time it is added to the detectors DetectedObjects list
-        [SerializeField]
-        public DetectionEventHandler onDetected;
-
-        // Event is called for each GameObject at the time it is removed to the detectors DetectedObjects list
-        [SerializeField]
-        public DetectionEventHandler onLostDetection;
-        
-        protected readonly List<GameObject> detectedObjects = new List<GameObject>();
-
-        private float _checkTimer;
-        
-        protected virtual void Awake()
+        if (ignoreList == null)
         {
-            if (ignoreList == null)
+            ignoreList = new List<GameObject>();
+            detectedObjects = new List<GameObject>(20);
+        }
+    }
+
+    public virtual void Detect(){}
+
+    public int DetectedGameObjectLength()
+    {
+        return detectedObjects.Count;
+    }
+
+    public GameObject GetFirstDetectedObject()
+    {
+        return detectedObjects[0];
+    }
+
+    public GameObject GetRandomDetectedObject()
+    {
+        return detectedObjects[Random.Range(0, DetectedGameObjectLength())];
+    }
+
+    public List<GameObject> GetDetectedObjects()
+    {
+        return detectedObjects;
+    }
+
+    public List<GameObject> GetDetectedObjectsSorted()
+    {
+        return detectedObjects.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToList();
+    }
+
+    public List<T> GetDetectedByComponent<T>()
+    {
+        var components = new List<T>();
+        foreach (var detectedObject in detectedObjects)
+        {
+            var component = detectedObject.GetComponent<T>();
+            if (component == null)
             {
-                ignoreList = new List<GameObject>();
+                continue;
             }
 
-            if (onDetected == null) 
-            {
-                onDetected = new DetectionEventHandler();
-            }
-
-            if (onLostDetection == null)
-            {
-                onLostDetection = new DetectionEventHandler();
-            }
+            components.Add(component);
         }
 
-        private void Update()
-        {
-            switch (detectionMode)
-            {
-                case DetectionMode.Update:
-                    Detect();
-                    break;
-                case DetectionMode.PeriodicUpdate:
-                    _checkTimer += Time.deltaTime;
-                    if (_checkTimer >= checkInterval)
-                    {
-                        Detect();
-                        _checkTimer = 0;
-                    }
-                    break;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (detectionMode == DetectionMode.FixedUpdate)
-            {
-                Detect();
-            }
-        }
-
-        public abstract void Detect();
-        
-        public List<GameObject> GetDetectedObjects()
-        {
-            return detectedObjects;
-        }
-
-        public List<GameObject> GetDetectedObjectsSorted()
-        {
-            return detectedObjects.OrderBy((d) => (d.transform.position - transform.position).sqrMagnitude).ToList();
-        }
-
-        public List<T> GetDetectedByComponent<T>()
-        {
-            var components = new List<T>();
-            foreach (var detectedObject in detectedObjects)
-            {
-                var component = detectedObject.GetComponent<T>();
-                if (component == null)
-                {
-                    continue;
-                }
-                components.Add(component);
-            }
-
-            return components;
+        return components;
 //            return detectedObjects.Select(detectedObject => detectedObject.GetComponent<T>()).Where(component => component != null).ToList();
-        }
-        
-        protected bool IsDetectionValid(GameObject detectedGameObject)
-        {
-            var retVal = false;
+    }
 
-            if (ignoreList.Contains(detectedGameObject))
+    protected bool IsDetectionValid(GameObject detectedGameObject)
+    {
+        var retVal = false;
+
+        if (ignoreList.Contains(detectedGameObject))
+        {
+            return false;
+        }
+
+        if (enableTagFilter)
+        {
+            foreach (var allowedTag in allowedTags)
             {
-                return false;
-            }
-            if (enableTagFilter)
-            {
-                foreach (var allowedTag in allowedTags)
+                if (detectedGameObject.CompareTag(allowedTag))
                 {
-                    if (detectedGameObject.CompareTag(allowedTag))
-                    {
-                        retVal = true;
-                    }
+                    retVal = true;
                 }
             }
-            else
-            {
-                retVal = true;
-            }
-
-            return retVal;
         }
-
-        protected void UpdateDetectionList(List<GameObject> newDetectionList)
+        else
         {
-            var objectsToRemove = new List<GameObject>();
-            var objectsToAdd = new List<GameObject>();
-            foreach (var oldDetectedObject in detectedObjects.Where(oldDetectedObject => !newDetectionList.Contains(oldDetectedObject)))
-            {
-                objectsToRemove.Add(oldDetectedObject);
-//                detectedObjects.Remove(oldDetectedObject);
-                onLostDetection.Invoke(oldDetectedObject);
-            }
+            retVal = true;
+        }
 
-            foreach (var o in objectsToRemove)
-            {
-                detectedObjects.Remove(o);
-            }
+        return retVal;
+    }
 
-            foreach (var newDetectedObject in newDetectionList.Where(newDetectedObject => !detectedObjects.Contains(newDetectedObject)))
+    protected void UpdateDetectionList(List<GameObject> newDetectionList)
+    {
+        for (int i = detectedObjects.Count - 1, n = -1; i > n; i--)
+        {
+            var detectedObject = detectedObjects[i];
+            if (!newDetectionList.Contains(detectedObject))
             {
-                detectedObjects.Add(newDetectedObject);
-                onDetected.Invoke(newDetectedObject);
+                onLostDetection?.Invoke(detectedObject);
+                detectedObjects.RemoveAt(i);
             }
         }
+
+        foreach (var o in newDetectionList)
+        {
+            if (!detectedObjects.Contains(o))
+            {
+                onDetected?.Invoke(o);
+                detectedObjects.Add(o);
+            }
+        }
+
+        /* 
+         var objectsToRemove = new List<GameObject>();
+ //            var objectsToAdd = new List<GameObject>();
+         foreach (var oldDetectedObject in detectedObjects.Where(oldDetectedObject =>
+                      !newDetectionList.Contains(oldDetectedObject)))
+         {
+             objectsToRemove.Add(oldDetectedObject);
+ //                detectedObjects.Remove(oldDetectedObject);
+             onLostDetection.Invoke(oldDetectedObject);
+         }
+ 
+         foreach (var o in objectsToRemove)
+         {
+             detectedObjects.Remove(o);
+         }
+ 
+         foreach (var newDetectedObject in newDetectionList.Where(newDetectedObject =>
+                      !detectedObjects.Contains(newDetectedObject)))
+         {
+             detectedObjects.Add(newDetectedObject);
+             onDetected.Invoke(newDetectedObject);
+         } */
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using G_AI.BehaviourTree;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class RunBehaviorTree : MonoBehaviour

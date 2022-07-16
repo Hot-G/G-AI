@@ -20,6 +20,8 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
 
     public override State OnUpdate()
     {
+        if (!targetTransform) return State.Failure;
+        
         if (targetTransform != blackboard.GetTransformValue(targetVariableName))
         {
             targetTransform = blackboard.GetTransformValue(targetVariableName);
@@ -27,7 +29,7 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
             blackboard.navMeshAgent.SetDestination(oldPosition);
         }
 
-        if (Vector3.SqrMagnitude(oldPosition - targetTransform.position) > 2f)
+        if (Vector3.SqrMagnitude(oldPosition - targetTransform.position) > 0.5f)
         {
             oldPosition = targetTransform.position;
             blackboard.navMeshAgent.SetDestination(oldPosition);

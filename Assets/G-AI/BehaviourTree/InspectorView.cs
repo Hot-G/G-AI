@@ -3,29 +3,32 @@
 using UnityEditor;
 using UnityEngine.UIElements;
 
-public class InspectorView : VisualElement
+namespace G_AI.BehaviourTree
 {
-    public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
-
-    private Editor editor;
-    public InspectorView()
+    public class InspectorView : VisualElement
     {
-        
-    }
+        public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
 
-    public void UpdateSelection(NodeView nodeView)
-    {
-        Clear();
-        
-        UnityEngine.Object.DestroyImmediate(editor);
-        if (nodeView == null) return;
-        editor = Editor.CreateEditor(nodeView.node);
-        var container = new IMGUIContainer(() =>
+        private Editor editor;
+        public InspectorView()
         {
-            if (editor == null) return;
-            editor.OnInspectorGUI();
-        });
-        Add(container);
+        
+        }
+
+        public void UpdateSelection(NodeView nodeView)
+        {
+            Clear();
+        
+            UnityEngine.Object.DestroyImmediate(editor);
+            if (nodeView == null) return;
+            editor = Editor.CreateEditor(nodeView.node);
+            var container = new IMGUIContainer(() =>
+            {
+                if (editor == null) return;
+                editor.OnInspectorGUI();
+            });
+            Add(container);
+        }
     }
 }
 

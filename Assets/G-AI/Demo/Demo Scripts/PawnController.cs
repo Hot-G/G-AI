@@ -6,39 +6,54 @@ namespace G_AI.Example
     public class PawnController : MonoBehaviour
     {
         [SerializeField] private RunBehaviorTree behaviorTreeRunner;
-        [SerializeField] private AISense aiSense;
+        [SerializeField] private Detector detector;
         private Blackboard blackboard;
         private Transform target;
-        private bool isSeeTarget;
 
         private void Start()
         {
             blackboard = behaviorTreeRunner.blackboard;
-            aiSense.OnSenseUpdated += OnSenseUpdated;
+            detector.onDetected += OnTargetDetected;
+            detector.onLostDetection += OnLostDetection;
         }
 
-        private void OnSenseUpdated(int seecount, Collider[] sensingcolliders)
+        private void OnTargetDetected(GameObject detectedGameObject)
         {
-            if (seecount == 0)
-            {
-                isSeeTarget = false;
-                blackboard.SetBoolValue("isSeeTarget", isSeeTarget);
-                return;
-            }
-        
-            target = sensingcolliders[0].transform;
-            isSeeTarget = true;
+            if (target) return;
+            
+            target = detectedGameObject.transform;
             blackboard.SetTransformValue("target", target);
             blackboard.SetBoolValue("isSeeTarget", true);
+        }
+        
+        private void OnLostDetection(GameObject obj)
+        {
+            if (target == null) return;
+            if (target != obj.transform) return;
+            
+            ChangeTarget();
+        }
+
+        private void ChangeTarget()
+        {
+            if (detector.DetectedGameObjectLength() == 0)
+            {
+                target = null;
+                blackboard.SetBoolValue("isSeeTarget", false);
+                blackboard.SetTransformValue("target", null);   
+            }
+            else
+            {
+                target = detector.GetFirstDetectedObject().transform;
+                blackboard.SetTransformValue("target", target);   
+            }
         }
 
         public void AttackTarget()
         {
             Destroy(target.gameObject, 2);
             target.gameObject.SetActive(false);
-            blackboard.SetBoolValue("isSeeTarget", false);
-            isSeeTarget = false;
-            target = null;
+            ChangeTarget();
         }
     }
 
