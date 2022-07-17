@@ -1,11 +1,12 @@
-﻿
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class BehaviorSequenceNode : BehaviorCompositeNode
+public class BehaviorSelectorNode : BehaviorCompositeNode
 {
     private int currentIndex;
 
-    public override string NodeName => "SEQUENCE";
+    public override string NodeName => "SELECTOR";
 
     public override void OnStart()
     {
@@ -21,12 +22,13 @@ public class BehaviorSequenceNode : BehaviorCompositeNode
             case State.Running:
                 return State.Running;
             case State.Failure:
-                return State.Failure;
+                currentIndex++;
+                return currentIndex == children.Count ? State.Success : State.Running;
             case State.Success:
                 currentIndex++;
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new System.ArgumentOutOfRangeException();
         }
 
         return currentIndex == children.Count ? State.Success : State.Running;

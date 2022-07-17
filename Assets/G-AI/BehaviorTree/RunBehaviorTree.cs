@@ -1,4 +1,4 @@
-﻿using G_AI.BehaviourTree;
+﻿using G_AI.BehaviorTree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +26,7 @@ public class RunBehaviorTree : MonoBehaviour
         }
 
         tree.BindBlackboard();
+        //ASSIGN BLACKBOARD DEFAULT VALUES
         blackboard.owner = transform;
         blackboard.navMeshAgent = GetComponent<NavMeshAgent>();
     }

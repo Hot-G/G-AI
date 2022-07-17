@@ -1,25 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="BehaviorTreeEditor.uss" />
+    <Style src="project://database/Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss?fileID=7433441132597879392&amp;guid=9eae202cef0d24c42a509072e3d293d4&amp;type=3#BehaviorTreeEditor" />
     <uie:Toolbar>
-        <uie:ToolbarMenu display-tooltip-when-elided="true" text="File" style="width: 86px;" />
+        <uie:ToolbarButton text="Save Tree" display-tooltip-when-elided="true" />
     </uie:Toolbar>
-    <SplitView fixed-pane-initial-dimension="300">
+    <G_AI.BehaviorTree.SplitView fixed-pane-initial-dimension="300">
         <ui:VisualElement name="left-panel" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
-            <SplitView orientation="Vertical" fixed-pane-initial-dimension="280">
+            <G_AI.BehaviorTree.SplitView orientation="Vertical" fixed-pane-initial-dimension="280">
                 <ui:VisualElement name="inspector-container">
                     <ui:Label text="INSPECTOR" display-tooltip-when-elided="true" style="background-color: rgb(34, 34, 34); margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 5px; padding-left: 4px; padding-right: 4px; font-size: 14px; -unity-text-align: upper-center; height: 30px; justify-content: flex-start; padding-top: 7px; -unity-font-style: bold; min-height: 30px;" />
-                    <InspectorView />
+                    <G_AI.BehaviorTree.InspectorView />
                 </ui:VisualElement>
                 <ui:VisualElement name="blackboard-container">
                     <ui:Label text="BLACKBOARD" display-tooltip-when-elided="true" style="background-color: rgb(34, 34, 34); margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 5px; padding-left: 4px; padding-right: 4px; font-size: 14px; -unity-text-align: upper-center; height: 30px; justify-content: flex-start; padding-top: 7px; -unity-font-style: bold; min-height: 30px;" />
                     <ui:IMGUIContainer />
                 </ui:VisualElement>
-            </SplitView>
+            </G_AI.BehaviorTree.SplitView>
         </ui:VisualElement>
         <ui:VisualElement name="right-panel">
-            <BehaviorTreeView focusable="true" style="flex-grow: 1;">
+            <G_AI.BehaviorTree.BehaviorTreeView focusable="true" style="flex-grow: 1;">
                 <ui:Label display-tooltip-when-elided="true" name="object-name" style="color: rgba(196, 196, 196, 0.6); font-size: 30px; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;" />
-            </BehaviorTreeView>
+            </G_AI.BehaviorTree.BehaviorTreeView>
         </ui:VisualElement>
-    </SplitView>
+    </G_AI.BehaviorTree.SplitView>
 </ui:UXML>

@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace G_AI.BehaviourTree
+namespace G_AI.BehaviorTree
 {
     public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
     {

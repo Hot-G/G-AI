@@ -29,7 +29,7 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
             blackboard.navMeshAgent.SetDestination(oldPosition);
         }
 
-        if (Vector3.SqrMagnitude(oldPosition - targetTransform.position) > 0.5f)
+        if (Vector3.SqrMagnitude(oldPosition - targetTransform.position) > 0.1f)
         {
             oldPosition = targetTransform.position;
             blackboard.navMeshAgent.SetDestination(oldPosition);

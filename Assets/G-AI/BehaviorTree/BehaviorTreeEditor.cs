@@ -4,10 +4,11 @@ using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace G_AI.BehaviourTree
+namespace G_AI.BehaviorTree
 {
     public class BehaviorTreeEditor : EditorWindow
     {
@@ -16,6 +17,7 @@ namespace G_AI.BehaviourTree
         private NodeSearchWindow searchWindow;
         private IMGUIContainer blackboardView;
         private Label objectNameLabel;
+        private ToolbarButton toolbarSaveButton;
 
         private SerializedObject treeObject;
         private SerializedProperty blackboardProperty;
@@ -51,18 +53,24 @@ namespace G_AI.BehaviourTree
 
             // Import UXML
             var visualTree =
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uxml");
+                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviorTree/StyleSheets/BehaviorTreeEditor.uxml");
             visualTree.CloneTree(root);
 
             // A stylesheet can be added to a VisualElement.
             // The style will be applied to the VisualElement and all of its children.
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviorTree/StyleSheets/BehaviorTreeEditor.uss");
             root.styleSheets.Add(styleSheet);
 
             treeView = root.Q<BehaviorTreeView>();
             inspectorView = root.Q<InspectorView>();
             blackboardView = root.Q<IMGUIContainer>();
             objectNameLabel = treeView.Q<Label>();
+            toolbarSaveButton = treeView.Q<ToolbarButton>();
+
+            toolbarSaveButton?.RegisterCallback<MouseUpEvent>(evt =>
+            {
+                AssetDatabase.SaveAssets();
+            });
         
             AddSearchWindow();
 

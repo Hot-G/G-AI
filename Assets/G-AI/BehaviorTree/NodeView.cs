@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace G_AI.BehaviourTree
+namespace G_AI.BehaviorTree
 {
     public class NodeView : Node
     {
@@ -16,7 +16,7 @@ namespace G_AI.BehaviourTree
         public Port input;
         public Port output;
 
-        public NodeView(BehaviorNode node) : base("Assets/G-AI/BehaviourTree/NodeView.uxml")
+        public NodeView(BehaviorNode node) : base("Assets/G-AI/BehaviorTree/StyleSheets/NodeView.uxml")
         {
             this.node = node;
             this.title = node.NodeName;

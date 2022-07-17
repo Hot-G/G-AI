@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace G_AI.BehaviourTree
+namespace G_AI.BehaviorTree
 {
     [CreateAssetMenu(menuName = "AI/Behaviour Tree", order = 0)]
     public class BehaviorTree : ScriptableObject

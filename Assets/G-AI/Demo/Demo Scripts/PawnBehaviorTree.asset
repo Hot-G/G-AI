@@ -97,7 +97,6 @@ MonoBehaviour:
   blackboard: {fileID: 1802745606647994635}
   nodes:
   - {fileID: 4947649144768494258}
-  - {fileID: 8808802118735985527}
   - {fileID: 7189921519586064382}
   - {fileID: -1313656969785246575}
   - {fileID: -9095412593959290550}
@@ -106,6 +105,7 @@ MonoBehaviour:
   - {fileID: 4749570007249346432}
   - {fileID: 2318840379790627076}
   - {fileID: -7208009608100834788}
+  - {fileID: 6759104988706117293}
 --- !u!114 &1802745606647994635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,7 +141,6 @@ MonoBehaviour:
   blackboard: {fileID: 1802745606647994635}
   nodeName: Move Target
   targetVariableName: target
-  chaseDistance: 1
 --- !u!114 &4213087447688787411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,7 +201,28 @@ MonoBehaviour:
   position: {x: 197.50012, y: -23}
   blackboard: {fileID: 1802745606647994635}
   nodeName: ROOT
-  child: {fileID: 8808802118735985527}
+  child: {fileID: 6759104988706117293}
+--- !u!114 &6759104988706117293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10a16ed882604adbb87a9035cd1ddf7, type: 3}
+  m_Name: SELECTOR
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: d09a3c7d7abf64599b85a1a20c0f7f41
+  position: {x: 75.59259, y: 151.99995}
+  blackboard: {fileID: 1802745606647994635}
+  nodeName: SELECTOR
+  children:
+  - {fileID: 4749570007249346432}
+  - {fileID: 4213087447688787411}
 --- !u!114 &7189921519586064382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,24 +242,3 @@ MonoBehaviour:
   blackboard: {fileID: 1802745606647994635}
   nodeName: Move Random Point
   moveRadius: 40
---- !u!114 &8808802118735985527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41a4d665acbd48818890bb30d8142b07, type: 3}
-  m_Name: SEQUENCE
-  m_EditorClassIdentifier: 
-  state: 0
-  isStarted: 0
-  guid: 488a650f8ef79466485603eee513fd59
-  position: {x: 244.49994, y: 152.23116}
-  blackboard: {fileID: 1802745606647994635}
-  nodeName: SEQUENCE
-  children:
-  - {fileID: 4749570007249346432}
-  - {fileID: 4213087447688787411}

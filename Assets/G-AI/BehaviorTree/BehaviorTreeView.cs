@@ -8,7 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace G_AI.BehaviourTree
+namespace G_AI.BehaviorTree
 {
     public class BehaviorTreeView : GraphView
     {
@@ -31,7 +31,7 @@ namespace G_AI.BehaviourTree
             this.AddManipulator(new RectangleSelector());
 
             var styleSheet =
-                AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviourTree/BehaviorTreeEditor.uss");
+                AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/G-AI/BehaviorTree/StyleSheets/BehaviorTreeEditor.uss");
             styleSheets.Add(styleSheet);
         
             //Undo.undoRedoPerformed += OnUndoRedo;

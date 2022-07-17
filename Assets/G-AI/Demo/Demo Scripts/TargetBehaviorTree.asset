@@ -18,7 +18,7 @@ MonoBehaviour:
   position: {x: 20.840698, y: 206.0227}
   blackboard: {fileID: 0}
   nodeName: Move Random Point
-  moveRadius: 20
+  moveRadius: 30
 --- !u!114 &-6361455697614541973
 MonoBehaviour:
   m_ObjectHideFlags: 0

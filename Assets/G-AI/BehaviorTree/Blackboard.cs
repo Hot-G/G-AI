@@ -144,7 +144,7 @@ public class BlackboardCreateEditor : EditorWindow
 
         // Import UXML
         var visualTree =
-            AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviourTree/CreateBlackboardEditor.uxml");
+            AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/G-AI/BehaviorTree/StyleSheets/CreateBlackboardEditor.uxml");
         visualTree.CloneTree(root);
 
         textField = root.Q<TextField>();
@@ -169,6 +169,7 @@ public class BlackboardCreateEditor : EditorWindow
             //OPEN FILE
             //AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<MonoScript>(path + "/" + textField.text + ".cs"));
             this.Close();
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath<MonoScript>(path + "/" + textField.text + ".cs");
         });
     }
 
