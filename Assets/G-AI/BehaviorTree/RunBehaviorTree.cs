@@ -36,13 +36,13 @@ public class RunBehaviorTree : MonoBehaviour
         tree.Update();
     }
 
-    public void Stop()
+    public void StopTree()
     {
         tree.rootNode.UpdateState(BehaviorNode.State.Failure);
         enabled = false;
     }
     
-    public void Start()
+    public void StartTree()
     {
         enabled = true;
     }

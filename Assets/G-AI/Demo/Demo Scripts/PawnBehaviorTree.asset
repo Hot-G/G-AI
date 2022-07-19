@@ -16,7 +16,7 @@ MonoBehaviour:
   isStarted: 0
   guid: 065a8c8c6c21c409da6245fffcd64993
   position: {x: 169.5, y: 665}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Wait
   duration: 1
   randomRange: 0.5
@@ -35,8 +35,8 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 9de52e72966c846f1805b33a3b630525
-  position: {x: 543.0001, y: 676.9999}
-  blackboard: {fileID: 1802745606647994635}
+  position: {x: 543.00006, y: 707.5001}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Attack
 --- !u!114 &-6760048810590498563
 MonoBehaviour:
@@ -54,11 +54,27 @@ MonoBehaviour:
   isStarted: 0
   guid: 17e98775617634f7eb5f948419c9458a
   position: {x: 393, y: 515.5}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: SEQUENCE
   children:
   - {fileID: 2318840379790627076}
   - {fileID: -7208009608100834788}
+--- !u!114 &-6686470646872524718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0151c1654dcdc435ba48d24f3ae260e7, type: 3}
+  m_Name: USED BLACKBOARD
+  m_EditorClassIdentifier: 
+  navMeshAgent: {fileID: 0}
+  owner: {fileID: 0}
+  isSeeTarget: 0
+  target: {fileID: 0}
 --- !u!114 &-1313656969785246575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +91,7 @@ MonoBehaviour:
   isStarted: 0
   guid: c4ea6d0900e334d4794fc69bc58663b5
   position: {x: 19.5, y: 515.5}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: SEQUENCE
   children:
   - {fileID: 7189921519586064382}
@@ -94,7 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rootNode: {fileID: 4947649144768494258}
   treeState: 0
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodes:
   - {fileID: 4947649144768494258}
   - {fileID: 7189921519586064382}
@@ -106,22 +122,6 @@ MonoBehaviour:
   - {fileID: 2318840379790627076}
   - {fileID: -7208009608100834788}
   - {fileID: 6759104988706117293}
---- !u!114 &1802745606647994635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0151c1654dcdc435ba48d24f3ae260e7, type: 3}
-  m_Name: USED BLACKBOARD
-  m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: 0}
-  owner: {fileID: 0}
-  isSeeTarget: 0
-  target: {fileID: 0}
 --- !u!114 &2318840379790627076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,10 +137,13 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: b8ceaf151569245599c1c3ba92b86ca4
-  position: {x: 363, y: 677}
-  blackboard: {fileID: 1802745606647994635}
+  position: {x: 351.00006, y: 665}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Move Target
   targetVariableName: target
+  keySelector:
+    keyName: target
+    blackboard: {fileID: -6686470646872524718}
 --- !u!114 &4213087447688787411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +160,7 @@ MonoBehaviour:
   isStarted: 0
   guid: 9985d625d6ee746d1a00c1e5b651b55b
   position: {x: 303.99994, y: 341}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Bool Selector
   child: {fileID: -6760048810590498563}
   boolVariableName: isSeeTarget
@@ -178,7 +181,7 @@ MonoBehaviour:
   isStarted: 0
   guid: 447fd8b0ba3ff402db19202cbe90d2a1
   position: {x: 94.50006, y: 341.00012}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Bool Selector
   child: {fileID: -1313656969785246575}
   boolVariableName: isSeeTarget
@@ -199,7 +202,7 @@ MonoBehaviour:
   isStarted: 0
   guid: a0e8cd426d5d543eca2de802be72aeea
   position: {x: 197.50012, y: -23}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: ROOT
   child: {fileID: 6759104988706117293}
 --- !u!114 &6759104988706117293
@@ -217,8 +220,8 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: d09a3c7d7abf64599b85a1a20c0f7f41
-  position: {x: 75.59259, y: 151.99995}
-  blackboard: {fileID: 1802745606647994635}
+  position: {x: 75.5, y: 152}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: SELECTOR
   children:
   - {fileID: 4749570007249346432}
@@ -239,6 +242,6 @@ MonoBehaviour:
   isStarted: 0
   guid: d9a6b92f7868a4aefbc4781d2cbb9a9e
   position: {x: -30.5, y: 664.76}
-  blackboard: {fileID: 1802745606647994635}
+  blackboard: {fileID: -6686470646872524718}
   nodeName: Move Random Point
   moveRadius: 40

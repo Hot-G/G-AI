@@ -33,7 +33,7 @@ namespace G_AI.BehaviorTree
                 node.nodeName = type.Name;
             node.name = node.nodeName;
             node.guid = GUID.Generate().ToString();
-            node.blackboard = blackboard;
+            node.SetBlackboard(blackboard);
             node.position = position;
 
             //Undo.RecordObject(this, "Behaviour Tree (Create Node)");
@@ -152,7 +152,7 @@ namespace G_AI.BehaviorTree
 
         public void BindBlackboard()
         {
-            Traverse(rootNode, node => { node.blackboard = blackboard; });
+            Traverse(rootNode, node => { node.SetBlackboard(blackboard); });
         }
 
 #if UNITY_EDITOR
@@ -209,7 +209,7 @@ namespace G_AI.BehaviorTree
 
                     foreach (var behaviourNode in treeItem.nodes)
                     {
-                        behaviourNode.blackboard = blackboardInstance;
+                        behaviourNode.SetBlackboard(blackboardInstance);
                     }
 
                     AssetDatabase.AddObjectToAsset(blackboardInstance, treeItem);

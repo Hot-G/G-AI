@@ -10,10 +10,10 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
 
     private Transform targetTransform;
     private Vector3 oldPosition;
-    
+    public BlackboardKeySelector keySelector;
     public override void OnStart()
     {
-        targetTransform = blackboard.GetTransformValue(targetVariableName);
+        targetTransform = keySelector.GetTransformValue();
         oldPosition = targetTransform.position;
         blackboard.navMeshAgent.SetDestination(oldPosition);
     }
@@ -22,9 +22,9 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
     {
         if (!targetTransform) return State.Failure;
         
-        if (targetTransform != blackboard.GetTransformValue(targetVariableName))
+        if (targetTransform != keySelector.GetTransformValue())
         {
-            targetTransform = blackboard.GetTransformValue(targetVariableName);
+            targetTransform = keySelector.GetTransformValue();
             oldPosition = targetTransform.position;
             blackboard.navMeshAgent.SetDestination(oldPosition);
         }
@@ -64,11 +64,14 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
 
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
-
-            EditorGUILayout.Space(15);
             
-            BlackboardKeyShower.ShowBlackboardKeyInPopup(typeof(UnityEngine.Transform), selectorItem, selectorItem.targetVariableName, (index, variableName) =>
+            base.OnInspectorGUI();
+            return;
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Node Settings");
+            EditorGUILayout.Space(5);
+            
+            BlackboardKeyShower.ShowBlackboardKeyInPopup(typeof(UnityEngine.Transform), selectorItem.blackboard, selectorItem.targetVariableName, (index, variableName) =>
             {
                 variableNameSerialized.stringValue = variableName;
                             

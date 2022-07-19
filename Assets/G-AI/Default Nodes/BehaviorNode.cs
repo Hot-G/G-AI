@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public abstract class BehaviorNode : ScriptableObject
 {
@@ -18,6 +19,21 @@ public abstract class BehaviorNode : ScriptableObject
     public string nodeName;
 
     public virtual string NodeName => "";
+
+    public void SetBlackboard(Blackboard setBlackboard)
+    {
+        blackboard = setBlackboard;
+        //ASSIGN BLACKBOARD KEY SELECTOR TO BLACKBOARD
+        var properties = this.GetType().GetFields().
+                Where(info => info.FieldType == typeof(BlackboardKeySelector));
+
+        foreach (var prop in properties)
+        {
+            var newSelector = (BlackboardKeySelector)this.GetType().GetField(prop.Name).GetValue(this);
+            typeof(BlackboardKeySelector).GetField("blackboard").SetValue(newSelector, setBlackboard);
+            //prop.SetValue(this, new BlackboardKeySelector(setBlackboard));
+        }
+    }
 
     public State Update()
     {

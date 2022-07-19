@@ -39,7 +39,7 @@ public class BehaviorBoolSelectorNode : BehaviorDecoratorNode
 
             EditorGUILayout.Space(15);
             
-            BlackboardKeyShower.ShowBlackboardKeyInPopup(typeof(bool), selectorItem, selectorItem.boolVariableName, (index, variableName) =>
+            BlackboardKeyShower.ShowBlackboardKeyInPopup(typeof(bool), selectorItem.blackboard, selectorItem.boolVariableName, (index, variableName) =>
             {
                 variableNameSerialized.stringValue = variableName;
             });
@@ -51,127 +51,10 @@ public class BehaviorBoolSelectorNode : BehaviorDecoratorNode
 #endif
 }
 
-
-
-
-public class BlackboardKeySelector
-{
-    public string keyName;
-    public Blackboard blackboard;
-
-    public BlackboardKeySelector(Blackboard usedBlackboard)
-    {
-        blackboard = usedBlackboard;
-    }
-
-    /*public static void ShowBlackboardKeyInPopup(System.Type type, BehaviorNode node, string currentSelectedVariable,
-        System.Action<int, string> onSelectionChanged)
-    {
-        var variableNameList = new List<string>();
-        
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Blackboard Key", GUILayout.MaxWidth(150));
-
-        if (node.blackboard == null)
-        {
-            EditorGUILayout.LabelField("Blackboard is not selected");
-            return;
-        }
-        
-        var fields = node.blackboard.GetType().GetFields()
-            .Where(a => a.FieldType == type);
-
-        variableNameList.Clear();
-        
-        if (!fields.Any())
-        {
-            EditorGUILayout.LabelField("No " + type.Name +" value");
-            return;
-        }
-
-        variableNameList.AddRange(fields.Select(blackboardField => blackboardField.Name));
-
-        var index = variableNameList.IndexOf(currentSelectedVariable);
-
-        EditorGUI.BeginChangeCheck();
-
-        index = EditorGUILayout.Popup(index, variableNameList.ToArray());
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            onSelectionChanged?.Invoke(index, variableNameList[index]);
-        }
-        
-        EditorGUILayout.EndHorizontal();
-    }*/
-
-    //[CustomEditor(typeof(BlackboardKeySelector))]
-    public class BehaviorKeyEditor : Editor
-    {
-        private SerializedProperty variableNameSerialized;
-        private BlackboardKeySelector blackboardKey;
-        private Blackboard blackboard;
-
-        private void OnEnable()
-        {
-            //blackboardKey = (BlackboardKeySelector)target;
-            variableNameSerialized = serializedObject.FindProperty("keyName");
-        }
-
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-
-            EditorGUILayout.Space(10);
-
-            var variableNameList = new List<string>();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Blackboard Key", GUILayout.MaxWidth(150));
-
-            if (serializedObject.FindProperty("blackboard") == null)
-            {
-                EditorGUILayout.LabelField("Blackboard is not selected");
-                return;
-            }
-
-            var fields = serializedObject.FindProperty("blackboard").GetType().GetFields()
-                .Where(a => a.FieldType == typeof(bool));
-
-            variableNameList.Clear();
-
-            if (!fields.Any())
-            {
-                EditorGUILayout.LabelField("No " + "bool" + " value");
-                return;
-            }
-
-            variableNameList.AddRange(fields.Select(blackboardField => blackboardField.Name));
-
-            //var index = variableNameList.IndexOf(currentSelectedVariable);
-            var index = 0;
-
-            EditorGUI.BeginChangeCheck();
-
-            index = EditorGUILayout.Popup(index, variableNameList.ToArray());
-
-            if (EditorGUI.EndChangeCheck())
-            {
-
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
-}
-
-
+#if UNITY_EDITOR
 public static class BlackboardKeyShower
 {
-    public static void ShowBlackboardKeyInPopup(System.Type type, BehaviorNode node, string currentSelectedVariable,
+    public static void ShowBlackboardKeyInPopup(System.Type type, Blackboard blackboard, string currentSelectedVariable,
         System.Action<int, string> onSelectionChanged)
     {
         var variableNameList = new List<string>();
@@ -179,13 +62,13 @@ public static class BlackboardKeyShower
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Blackboard Key", GUILayout.MaxWidth(150));
 
-        if (node.blackboard == null)
+        if (blackboard == null)
         {
             EditorGUILayout.LabelField("Blackboard is not selected");
             return;
         }
 
-        var fields = node.blackboard.GetType().GetFields()
+        var fields = blackboard.GetType().GetFields()
             .Where(a => a.FieldType == type);
 
         variableNameList.Clear();
@@ -212,3 +95,4 @@ public static class BlackboardKeyShower
         EditorGUILayout.EndHorizontal();
     }
 }
+#endif
