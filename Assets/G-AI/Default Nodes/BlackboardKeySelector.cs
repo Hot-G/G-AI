@@ -32,6 +32,33 @@ public class BlackboardKeySelector
     {
         return blackboard.GetObjectValue<T>(keyName);
     }
+    
+    public void SetBoolValue(bool value)
+    {
+        blackboard.SetBoolValue(keyName, value);
+    }
+    
+    public void SetStringValue(string value)
+    {
+        blackboard.SetStringValue(keyName, value);
+    }
+    
+    public void SetIntValue(int value)
+    {
+        blackboard.SetIntValue(keyName, value);
+    }
+    
+    public void SetTransformValue(Transform value)
+    {
+        blackboard.SetTransformValue(keyName, value);
+    }
+
+    public void SetObjectValue(object value)
+    {
+        blackboard.SetObjectValue(keyName, value);
+    }
+
+#if UNITY_EDITOR
 
     [CustomPropertyDrawer(typeof(BlackboardKeySelector))]
     public class BehaviorKeySelectorDrawer : PropertyDrawer
@@ -85,4 +112,7 @@ public class BlackboardKeySelector
             EditorGUILayout.EndHorizontal();
         }
     }
+        
+#endif
+    
 }

@@ -1,12 +1,8 @@
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BehaviorMoveTargetNode : BehaviorActionNode
 {
     public override string NodeName => "Move Target";
-
-    [HideInInspector] public string targetVariableName;
 
     private Transform targetTransform;
     private Vector3 oldPosition;
@@ -48,37 +44,4 @@ public class BehaviorMoveTargetNode : BehaviorActionNode
 
         return State.Running;
     }
-
-#if UNITY_EDITOR
-    
-    [CustomEditor(typeof(BehaviorMoveTargetNode))]
-    public class BehaviorMoveTargetEditor : Editor
-    {
-        private SerializedProperty variableNameSerialized;
-        private BehaviorMoveTargetNode selectorItem;
-        private void OnEnable()
-        {
-            selectorItem = (BehaviorMoveTargetNode)target;
-            variableNameSerialized = serializedObject.FindProperty("targetVariableName");
-        }
-
-        public override void OnInspectorGUI()
-        {
-            
-            base.OnInspectorGUI();
-            return;
-            EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField("Node Settings");
-            EditorGUILayout.Space(5);
-            
-            BlackboardKeyShower.ShowBlackboardKeyInPopup(typeof(UnityEngine.Transform), selectorItem.blackboard, selectorItem.targetVariableName, (index, variableName) =>
-            {
-                variableNameSerialized.stringValue = variableName;
-                            
-                serializedObject.ApplyModifiedProperties();
-            });
-        }
-    }
-    
-#endif
 }

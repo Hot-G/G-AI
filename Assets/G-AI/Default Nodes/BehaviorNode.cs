@@ -31,7 +31,6 @@ public abstract class BehaviorNode : ScriptableObject
         {
             var newSelector = (BlackboardKeySelector)this.GetType().GetField(prop.Name).GetValue(this);
             typeof(BlackboardKeySelector).GetField("blackboard").SetValue(newSelector, setBlackboard);
-            //prop.SetValue(this, new BlackboardKeySelector(setBlackboard));
         }
     }
 

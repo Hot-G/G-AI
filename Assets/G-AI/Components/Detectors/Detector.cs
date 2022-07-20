@@ -78,7 +78,6 @@ public abstract class Detector : MonoBehaviour
         }
 
         return components;
-//            return detectedObjects.Select(detectedObject => detectedObject.GetComponent<T>()).Where(component => component != null).ToList();
     }
 
     protected bool IsDetectionValid(GameObject detectedGameObject)
@@ -115,8 +114,8 @@ public abstract class Detector : MonoBehaviour
             var detectedObject = detectedObjects[i];
             if (!newDetectionList.Contains(detectedObject))
             {
-                onLostDetection?.Invoke(detectedObject);
                 detectedObjects.RemoveAt(i);
+                onLostDetection?.Invoke(detectedObject);
             }
         }
 
@@ -124,32 +123,9 @@ public abstract class Detector : MonoBehaviour
         {
             if (!detectedObjects.Contains(o))
             {
-                onDetected?.Invoke(o);
                 detectedObjects.Add(o);
+                onDetected?.Invoke(o);
             }
         }
-
-        /* 
-         var objectsToRemove = new List<GameObject>();
- //            var objectsToAdd = new List<GameObject>();
-         foreach (var oldDetectedObject in detectedObjects.Where(oldDetectedObject =>
-                      !newDetectionList.Contains(oldDetectedObject)))
-         {
-             objectsToRemove.Add(oldDetectedObject);
- //                detectedObjects.Remove(oldDetectedObject);
-             onLostDetection.Invoke(oldDetectedObject);
-         }
- 
-         foreach (var o in objectsToRemove)
-         {
-             detectedObjects.Remove(o);
-         }
- 
-         foreach (var newDetectedObject in newDetectionList.Where(newDetectedObject =>
-                      !detectedObjects.Contains(newDetectedObject)))
-         {
-             detectedObjects.Add(newDetectedObject);
-             onDetected.Invoke(newDetectedObject);
-         } */
     }
 }
