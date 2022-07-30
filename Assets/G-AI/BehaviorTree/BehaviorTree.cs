@@ -33,7 +33,6 @@ namespace G_AI.BehaviorTree
                 node.nodeName = type.Name;
             node.name = node.nodeName;
             node.guid = GUID.Generate().ToString();
-            node.SetBlackboard(blackboard);
             node.position = position;
 
             //Undo.RecordObject(this, "Behaviour Tree (Create Node)");
@@ -46,6 +45,8 @@ namespace G_AI.BehaviorTree
 
             //Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (Create Node)");
             AssetDatabase.SaveAssets();
+            node.SetBlackboard(blackboard);
+            
             return node;
         }
 

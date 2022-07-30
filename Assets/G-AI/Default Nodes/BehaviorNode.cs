@@ -22,6 +22,7 @@ public abstract class BehaviorNode : ScriptableObject
 
     public void SetBlackboard(Blackboard setBlackboard)
     {
+        if (setBlackboard == null) return;
         blackboard = setBlackboard;
         //ASSIGN BLACKBOARD KEY SELECTOR TO BLACKBOARD
         var properties = this.GetType().GetFields().
@@ -30,6 +31,7 @@ public abstract class BehaviorNode : ScriptableObject
         foreach (var prop in properties)
         {
             var newSelector = (BlackboardKeySelector)this.GetType().GetField(prop.Name).GetValue(this);
+            if (newSelector == null) return;
             typeof(BlackboardKeySelector).GetField("blackboard").SetValue(newSelector, setBlackboard);
         }
     }
