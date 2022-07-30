@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using G_AI.Attributes;
+#endif
 
 public enum DetectionMode
 {
@@ -16,6 +19,9 @@ public abstract class Detector : MonoBehaviour
 {
     public List<GameObject> ignoreList;
     public bool enableTagFilter;
+    #if UNITY_EDITOR
+    [TagSelector]
+    #endif
     public string[] allowedTags;
     
 

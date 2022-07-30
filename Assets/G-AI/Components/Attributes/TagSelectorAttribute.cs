@@ -1,3 +1,6 @@
+#if UNITY_EDITOR
+
+using UnityEditor;
 using UnityEngine;
 
 namespace G_AI.Attributes
@@ -22,3 +25,5 @@ namespace G_AI.Attributes
         }
     }
 }
+
+#endif
