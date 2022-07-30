@@ -55,15 +55,15 @@ public class Blackboard : ScriptableObject
             return navMeshAgent.ToString();
         
         if (typeof(bool) == propertyType)
-            return GetBoolValue(propertyName).ToString();
+            return boolVariables.ContainsKey(propertyName) ? GetBoolValue(propertyName).ToString() : "";
         if (typeof(string) == propertyType)
-            return GetStringValue(propertyName);
+            return stringVariables.ContainsKey(propertyName) ? GetStringValue(propertyName) : "";
         if (typeof(int) == propertyType)
-            return GetIntValue(propertyName).ToString();
+            return intVariables.ContainsKey(propertyName) ? GetIntValue(propertyName).ToString() : "";
         if (typeof(Transform) == propertyType)
-            return GetTransformValue(propertyName)?.ToString();
+            return transformVariables.ContainsKey(propertyName) ? GetTransformValue(propertyName)?.ToString() : "";
         
-        return GetObjectValue<string>(propertyName);
+        return objectVariables.ContainsKey(propertyName) ? GetObjectValue<string>(propertyName) : "";
     }
     
 #endif

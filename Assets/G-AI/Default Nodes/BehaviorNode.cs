@@ -22,7 +22,6 @@ public abstract class BehaviorNode : ScriptableObject
 
     public void SetBlackboard(Blackboard setBlackboard)
     {
-        if (setBlackboard == null) return;
         blackboard = setBlackboard;
         //ASSIGN BLACKBOARD KEY SELECTOR TO BLACKBOARD
         var properties = this.GetType().GetFields().

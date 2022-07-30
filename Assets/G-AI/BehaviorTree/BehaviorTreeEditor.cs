@@ -82,19 +82,22 @@ namespace G_AI.BehaviorTree
         private void ShowBlackboardProperty()
         {
             if (treeObject == null) return;
-            if (blackboard == null) return;
             if (blackboardView == null) return;
-        
+
             blackboardView.onGUIHandler = () =>
             {
-                foreach (var fieldInfo in blackboard.GetType().GetFields())
+                if (tree == null) return;
+                if (tree.blackboard == null) return;
+
+
+                foreach (var fieldInfo in tree.blackboard.GetType().GetFields())
                 {
                     var fieldName = fieldInfo.FieldType.ToString();
                     var pointIndex = fieldName.LastIndexOf('.') + 1;
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(fieldInfo.Name + " (" + fieldName.Substring(pointIndex) + ")");
-                    if (Application.isPlaying)
-                        EditorGUILayout.LabelField(blackboard.GetValue(fieldInfo.Name, fieldInfo.FieldType));
+                    if (Application.isPlaying && tree.blackboard != null)
+                        EditorGUILayout.LabelField(tree.blackboard.GetValue(fieldInfo.Name, fieldInfo.FieldType));
                     EditorGUILayout.EndHorizontal();
                 }
             };

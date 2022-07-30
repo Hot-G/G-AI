@@ -16,24 +16,9 @@ MonoBehaviour:
   isStarted: 0
   guid: 259799dda421d4d929e2f08b7ae79c43
   position: {x: 43, y: 375}
-  blackboard: {fileID: -7006953426154407525}
+  blackboard: {fileID: 0}
   nodeName: Move Random Point
   moveRadius: 30
---- !u!114 &-7006953426154407525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b100c394dfaaf4a9b84378982038f48e, type: 3}
-  m_Name: USED BLACKBOARD
-  m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: 0}
-  owner: {fileID: 0}
-  deneemeValue: 0
 --- !u!114 &-6361455697614541973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50,7 +35,7 @@ MonoBehaviour:
   isStarted: 0
   guid: 5ab7eb567cc3a4ffab764f38187f46ad
   position: {x: 0, y: -16.599998}
-  blackboard: {fileID: -7006953426154407525}
+  blackboard: {fileID: 0}
   nodeName: ROOT
   child: {fileID: -7131323571410084446}
 --- !u!114 &11400000
@@ -67,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rootNode: {fileID: -6361455697614541973}
   treeState: 0
-  blackboard: {fileID: -7006953426154407525}
+  blackboard: {fileID: 0}
   nodes:
   - {fileID: -6361455697614541973}
   - {fileID: -7131323571410084446}

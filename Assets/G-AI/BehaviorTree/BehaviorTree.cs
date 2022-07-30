@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -176,20 +177,22 @@ namespace G_AI.BehaviorTree
                 var types = TypeCache.GetTypesDerivedFrom<Blackboard>();
 
                 variableNameList.Clear();
+                variableNameList.Add("None");
+                
                 if (types.Count == 0)
                 {
                     EditorGUILayout.LabelField("is not created");
                     return;
                 }
 
-                int index = -1;
-                if (treeItem.blackboard)
-                    index = types.IndexOf(treeItem.blackboard.GetType());
-
                 foreach (var blackboardType in types)
                 {
                     variableNameList.Add(blackboardType.Name);
                 }
+                
+                int index = 0;
+                if (treeItem.blackboard)
+                    index = variableNameList.IndexOf(treeItem.blackboard.GetType().Name);
 
                 EditorGUI.BeginChangeCheck();
 
@@ -204,7 +207,16 @@ namespace G_AI.BehaviorTree
                         treeItem.blackboard = null;
                     }
 
-                    var blackboardInstance = CreateInstance(types[index]) as Blackboard;
+                    if (index == 0)
+                    {
+                        foreach (var behaviourNode in treeItem.nodes)
+                        {
+                            behaviourNode.SetBlackboard(null);
+                        }
+                        return;
+                    }
+
+                    var blackboardInstance = CreateInstance(types.First(t => t.Name == variableNameList[index])) as Blackboard;
                     blackboardInstance.name = "USED BLACKBOARD";
                     treeItem.blackboard = blackboardInstance;
 
