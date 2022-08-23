@@ -60,7 +60,7 @@ If you want to open **search panel**, press the Spacebar and open it.
 
 ![](Images/Aspose.Words.bd83c876-36e3-4884-bc63-88538ae2dbae.002.jpeg)
 
-![](Images/Images/Aspose.Words.bd83c876-36e3-4884-bc63-88538ae2dbae.003.jpeg)
+![](Images/Aspose.Words.bd83c876-36e3-4884-bc63-88538ae2dbae.003.jpeg)
 
 
 1. Action Nodes
@@ -129,5 +129,5 @@ Second way is, create a c# file and inherit from Blackboard class.
 
 2. Assign Blackboard To Behavior Tree
 
-When selected the Behavior Tree, Inspector  ![](Images/Aspose.Words.bd83c876-36e3-4884-bc63-88538ae2dbae.009.jpeg)shows some settings. You can select  blackboard from popup. 
-
+When selected the Behavior Tree, Inspector  shows some settings. You can select  blackboard from popup. 
+![](Images/Aspose.Words.bd83c876-36e3-4884-bc63-88538ae2dbae.009.jpeg)
