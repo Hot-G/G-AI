@@ -181,7 +181,7 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 447fd8b0ba3ff402db19202cbe90d2a1
-  position: {x: 94.50006, y: 341.00012}
+  position: {x: 94.5, y: 341}
   blackboard: {fileID: -5539253552244920700}
   nodeName: Bool Selector
   child: {fileID: -1313656969785246575}

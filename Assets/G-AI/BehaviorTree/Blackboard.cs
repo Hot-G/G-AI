@@ -124,7 +124,7 @@ public class Blackboard : ScriptableObject
 
 public class BlackboardCreateEditor : EditorWindow
 {
-    [MenuItem("Assets/Create/AI/Create Blackboard")]
+    [MenuItem("Assets/Create/AI/Blackboard")]
     public static void OpenWindow()
     {
         BlackboardCreateEditor wnd = GetWindow<BlackboardCreateEditor>(true, string.Empty, true);

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace G_AI.BehaviorTree
 {
-    [CreateAssetMenu(menuName = "AI/Behaviour Tree", order = 0)]
+    [CreateAssetMenu(menuName = "AI/Behavior Tree", order = 0)]
     public class BehaviorTree : ScriptableObject
     {
         public BehaviorNode rootNode;
