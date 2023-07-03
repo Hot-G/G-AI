@@ -10,7 +10,7 @@ namespace G_AI.BehaviorTree
     {
         public BehaviorNode rootNode;
         public BehaviorNode.State treeState = BehaviorNode.State.Running;
-        [HideInInspector] public Blackboard blackboard;
+        public Blackboard blackboard;
 
         public List<BehaviorNode> nodes = new List<BehaviorNode>();
 
@@ -25,6 +25,29 @@ namespace G_AI.BehaviorTree
         }
 
 #if UNITY_EDITOR
+        
+        private List<BehaviorNode> cacheAddedNodes = new List<BehaviorNode>();
+        private List<BehaviorNode> cacheRemovedNodes = new List<BehaviorNode>();
+
+        public void SaveTree()
+        {
+            nodes.AddRange(cacheAddedNodes);
+            for (var i = 0; i < cacheRemovedNodes.Count; i++)
+            {
+                var removedNode = cacheRemovedNodes[i];
+                nodes.Remove(removedNode);
+                i--;
+            }
+
+            cacheAddedNodes.Clear();
+            cacheRemovedNodes.Clear();
+        }
+        
+        public void DiscardTree()
+        {
+            cacheAddedNodes.Clear();
+            cacheRemovedNodes.Clear();
+        }
 
         public BehaviorNode CreateNode(System.Type type, Vector2 position)
         {
@@ -36,16 +59,16 @@ namespace G_AI.BehaviorTree
             node.guid = GUID.Generate().ToString();
             node.position = position;
 
-            //Undo.RecordObject(this, "Behaviour Tree (Create Node)");
-            nodes.Add(node);
+            Undo.RecordObject(this, "Behaviour Tree (Create Node)");
+            cacheAddedNodes.Add(node);
 
             if (!Application.isPlaying)
             {
                 AssetDatabase.AddObjectToAsset(node, this);
             }
-
-            //Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (Create Node)");
-            AssetDatabase.SaveAssets();
+            
+            Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (Create Node)");
+            //AssetDatabase.SaveAssets();
             node.SetBlackboard(blackboard);
             
             return node;
@@ -53,34 +76,39 @@ namespace G_AI.BehaviorTree
 
         public void DeleteNode(BehaviorNode node)
         {
-            //Undo.RecordObject(this, "Behaviour Tree (Remove Node)");
-            nodes.Remove(node);
-            AssetDatabase.RemoveObjectFromAsset(node);
-            //Undo.DestroyObjectImmediate(node);
-            AssetDatabase.SaveAssets();
+            Undo.RecordObject(this, "Behaviour Tree (Remove Node)");
+            if (cacheAddedNodes.Contains(node))
+            {
+                cacheAddedNodes.Remove(node);
+            }
+            else
+            {
+                cacheRemovedNodes.Add(node);   
+            }
+            
+            //AssetDatabase.RemoveObjectFromAsset(node);
+            Undo.DestroyObjectImmediate(node);
+            //AssetDatabase.SaveAssets();
         }
 
         public void AddChild(BehaviorNode parent, BehaviorNode child)
         {
             if (parent is BehaviorDecoratorNode decoratorNode)
             {
-                //Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
                 decoratorNode.child = child;
-                //EditorUtility.SetDirty(decoratorNode);
             }
 
             if (parent is BehaviorRootNode behaviourRootNode)
             {
-                //Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
                 behaviourRootNode.child = child;
-                //EditorUtility.SetDirty(behaviourRootNode);
             }
 
             if (parent is BehaviorCompositeNode compositeNode)
             {
-                //Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
                 compositeNode.children.Add(child);
-                //EditorUtility.SetDirty(compositeNode);
             }
         }
 
@@ -88,23 +116,20 @@ namespace G_AI.BehaviorTree
         {
             if (parent is BehaviorDecoratorNode decoratorNode)
             {
-                //Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(decoratorNode, "Behaviour Tree (Add Child)");
                 decoratorNode.child = null;
-                //EditorUtility.SetDirty(decoratorNode);
             }
 
             if (parent is BehaviorRootNode behaviourRootNode)
             {
-                //Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(behaviourRootNode, "Behaviour Tree (Add Child)");
                 behaviourRootNode.child = null;
-                //EditorUtility.SetDirty(behaviourRootNode);
             }
 
             if (parent is BehaviorCompositeNode compositeNode)
             {
-                //Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
+                Undo.RecordObject(compositeNode, "Behaviour Tree (Add Child)");
                 compositeNode.children.Remove(child);
-                //EditorUtility.SetDirty(compositeNode);
             }
         }
 
@@ -165,7 +190,7 @@ namespace G_AI.BehaviorTree
 
             public override void OnInspectorGUI()
             {
-                base.OnInspectorGUI();
+                //base.OnInspectorGUI();
 
                 var treeItem = (BehaviorTree)target;
 

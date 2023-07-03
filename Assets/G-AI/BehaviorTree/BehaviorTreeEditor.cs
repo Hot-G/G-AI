@@ -4,7 +4,6 @@ using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,7 +16,7 @@ namespace G_AI.BehaviorTree
         private NodeSearchWindow searchWindow;
         private IMGUIContainer blackboardView;
         private Label objectNameLabel;
-        private ToolbarButton toolbarSaveButton;
+        private Button toolbarSaveButton;
 
         private SerializedObject treeObject;
         private SerializedProperty blackboardProperty;
@@ -65,18 +64,39 @@ namespace G_AI.BehaviorTree
             inspectorView = root.Q<InspectorView>();
             blackboardView = root.Q<IMGUIContainer>();
             objectNameLabel = treeView.Q<Label>();
-            toolbarSaveButton = treeView.Q<ToolbarButton>();
-
-            toolbarSaveButton?.RegisterCallback<MouseUpEvent>(evt =>
-            {
-                AssetDatabase.SaveAssets();
-            });
+            toolbarSaveButton = root.Q<Button>("saveButton");
+            
+            toolbarSaveButton.clicked += SaveChanges;
         
             AddSearchWindow();
 
             treeView.OnNodeSelected = OnNodeSelectionChanged;
             treeView.OnNodeDeleted = OnNodeDeleted;
+            treeView.OnNodeAdded = OnNodeAdded;
+            treeView.OnNodeMoved = OnNodeMoved;
+            treeView.OnEdgeChanged = OnEdgeChanged;
             OnSelectionChange();
+
+            Undo.undoRedoPerformed += () =>
+            {
+                treeView?.ClearView();
+                treeView?.PopulateView(tree);
+            };
+        }
+
+        public override void SaveChanges()
+        {
+            base.SaveChanges();
+            
+            tree.SaveTree();
+            AssetDatabase.SaveAssets();
+        }
+
+        public override void DiscardChanges()
+        {
+            base.DiscardChanges();
+            
+            tree.DiscardTree();
         }
 
         private void ShowBlackboardProperty()
@@ -106,7 +126,7 @@ namespace G_AI.BehaviorTree
         private void AddSearchWindow()
         {
             searchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
-            searchWindow.Configure(EditorWindow.focusedWindow, treeView);
+            searchWindow.Configure(this, treeView);
             treeView.nodeCreationRequest = context =>
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
@@ -145,6 +165,14 @@ namespace G_AI.BehaviorTree
 
         private void OnSelectionChange()
         {
+            if (hasUnsavedChanges)
+            {
+                if (!PrivateRequestClose(this))
+                {
+                    return;
+                }
+            }
+            
             var selectedTree = Selection.activeObject as BehaviorTree;
 
             var objectName = "";
@@ -207,11 +235,59 @@ namespace G_AI.BehaviorTree
         private void OnNodeDeleted()
         {
             inspectorView.UpdateSelection(null);
+            hasUnsavedChanges = true;
+        }
+        
+        private void OnNodeAdded(BehaviorNode behaviorNode)
+        {
+            hasUnsavedChanges = true;
+        }
+        
+        private void OnNodeMoved(NodeView behaviorNodeView)
+        {
+            hasUnsavedChanges = true;
+        }
+        
+        private void OnEdgeChanged(Edge edge)
+        {
+            hasUnsavedChanges = true;
         }
 
         private void OnInspectorUpdate()
         {
             treeView?.UpdateNodeStates();
+        }
+        
+        private bool PrivateRequestClose(EditorWindow unsavedWindow)
+        {
+            var text = unsavedWindow.titleContent.text;
+            var num = EditorUtility.DisplayDialogComplex((string.IsNullOrEmpty(text) ? "" : text + " - ") + L10n.Tr("Unsaved Changes Detected"), unsavedWindow.saveChangesMessage, L10n.Tr("Save"), L10n.Tr("Cancel"), L10n.Tr("Discard"));
+            try
+            {
+                switch (num)
+                {
+                    case 0:
+                        bool flag = true;
+                        unsavedWindow.SaveChanges();
+                        flag &= !unsavedWindow.hasUnsavedChanges;
+                        return flag;
+                    case 1:
+                        return false;
+                    case 2:
+                        unsavedWindow.DiscardChanges();
+                        break;
+                    default:
+                        Debug.LogError((object) "Unrecognized option.");
+                        goto case 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                EditorUtility.DisplayDialog(L10n.Tr("Save Changes Failed"), ex.Message, L10n.Tr("OK"));
+                return false;
+            }
+
+            return true;
         }
     }
 }

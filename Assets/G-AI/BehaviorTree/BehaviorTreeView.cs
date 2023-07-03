@@ -16,6 +16,9 @@ namespace G_AI.BehaviorTree
 
         public Action<NodeView> OnNodeSelected;
         public Action OnNodeDeleted;
+        public Action<BehaviorNode> OnNodeAdded;
+        public Action<NodeView> OnNodeMoved;
+        public Action<Edge> OnEdgeChanged;
     
         private BehaviorTree tree;
         private NodeView selectedNode;
@@ -52,19 +55,33 @@ namespace G_AI.BehaviorTree
             graphViewChanged += OnGraphViewChanged;
         }
 
-        public void PopulateView(BehaviorTree tree)
+        public void PopulateView(BehaviorTree populateTree)
         {
-            this.tree = tree;
-
+            if (populateTree != null)
+                tree = populateTree;
+            
             if (tree.rootNode == null)
             {
-                tree.rootNode = tree.CreateNode(typeof(BehaviorRootNode), Vector2.zero) as BehaviorRootNode;
+                tree.rootNode = populateTree.CreateNode(typeof(BehaviorRootNode), Vector2.zero) as BehaviorRootNode;
                 //EditorUtility.SetDirty(tree);
                 AssetDatabase.SaveAssets();
             }
 
             //CREATE NODE VIEW
-            tree.nodes.ForEach(CreateNodeView);
+            for (var i = 0; i < tree.nodes.Count; i++)
+            {
+                var behaviorNode = tree.nodes[i];
+                
+                if (behaviorNode == null)
+                {
+                    tree.nodes.Remove(behaviorNode);
+                    i--;
+                    continue;
+                }
+
+                CreateNodeView(behaviorNode);
+            }
+
             //CREATE EDGES
             tree.nodes.ForEach(n =>
             {
@@ -101,14 +118,18 @@ namespace G_AI.BehaviorTree
                     NodeView parentView = edge.output.node as NodeView;
                     NodeView childView = edge.input.node as NodeView;
                     tree.RemoveChild(parentView.node, childView.node);
+                    
+                    OnEdgeChanged?.Invoke(edge);
                 }
             });
-
+            
             graphViewChange.edgesToCreate?.ForEach(edge =>
             {
                 NodeView parentView = edge.output.node as NodeView;
                 NodeView childView = edge.input.node as NodeView;
                 tree.AddChild(parentView.node, childView.node);
+                
+                OnEdgeChanged?.Invoke(edge);
             });
 
             if (graphViewChange.movedElements != null)
@@ -117,6 +138,8 @@ namespace G_AI.BehaviorTree
                 {
                     var view = n as NodeView;
                     view.SortChildren();
+                    
+                    OnNodeMoved?.Invoke(view);
                 });
             }
 
@@ -177,6 +200,7 @@ namespace G_AI.BehaviorTree
         public void CreateBehaviorNode(System.Type type, Vector2 position)
         {
             BehaviorNode node = tree.CreateNode(type, position);
+            OnNodeAdded?.Invoke(node);
             CreateNodeView(node);
         }
 

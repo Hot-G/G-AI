@@ -24,8 +24,8 @@ namespace G_AI.BehaviorTree
 
             //style.left = node.position.x;
             //style.top = node.position.y;
-            SetPosition(new Rect(node.position, Vector2.zero));
-        
+            base.SetPosition(new Rect(node.position, Vector2.zero));
+
             CreateInputPorts();
             CreateOutputPorts();
             SetupClasses();
@@ -111,10 +111,9 @@ namespace G_AI.BehaviorTree
         public override void SetPosition(Rect newPos)
         {
             base.SetPosition(newPos);
-            //Undo.RecordObject(node, "Behaviour Tree (Set Position)");
+            Undo.RecordObject(node, "Behaviour Node (Set Position)");
             node.position.x = newPos.xMin;
             node.position.y = newPos.yMin;
-            //EditorUtility.SetDirty(node);
         }
 
         public override void OnSelected()

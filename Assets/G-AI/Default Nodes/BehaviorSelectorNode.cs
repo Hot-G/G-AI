@@ -5,12 +5,14 @@ using UnityEngine;
 public class BehaviorSelectorNode : BehaviorCompositeNode
 {
     private int currentIndex;
+    private State finishState;
 
     public override string NodeName => "SELECTOR";
 
     public override void OnStart()
     {
         currentIndex = 0;
+        finishState = State.Failure;
     }
 
     public override State OnUpdate()
@@ -23,14 +25,15 @@ public class BehaviorSelectorNode : BehaviorCompositeNode
                 return State.Running;
             case State.Failure:
                 currentIndex++;
-                return currentIndex == children.Count ? State.Success : State.Running;
+                break;
             case State.Success:
                 currentIndex++;
+                finishState = State.Success;
                 break;
             default:
                 throw new System.ArgumentOutOfRangeException();
         }
 
-        return currentIndex == children.Count ? State.Success : State.Running;
+        return currentIndex == children.Count ? finishState : State.Running;
     }
 }

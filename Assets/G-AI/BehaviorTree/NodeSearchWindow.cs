@@ -110,7 +110,10 @@ namespace G_AI.BehaviorTree
                     return true;
             }
         
-            _graphView.CreateBehaviorNode((Type)SearchTreeEntry.userData, Vector2.zero);
+            Vector2 worldMousePosition = _window.rootVisualElement.ChangeCoordinatesTo(_window.rootVisualElement.parent, 
+                context.screenMousePosition - _window.position.position);
+            Vector2 localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);
+            _graphView.CreateBehaviorNode((Type)SearchTreeEntry.userData, localMousePosition);
             return true;
         }
     }
